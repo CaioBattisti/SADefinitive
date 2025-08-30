@@ -122,7 +122,7 @@ if($_SERVER['REQUEST_METHOD'] =="POST"){
     </nav>
 
     <div style="position: relative; text-align: center; margin: 20px 0;">
-        <h2 style="margin: 0;">Cadastrar Usuario:</h2>
+        <h2 style="margin: 0;">Cadastrar Usuarios(a):</h2>
         <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
             <form action="logout.php" method="POST">
                 <button type="submit">Logout</button>

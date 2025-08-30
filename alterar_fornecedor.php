@@ -75,7 +75,14 @@ if (isset($_GET['id']) || isset($_POST['id_busca'])) {
     </ul>
 </nav>
 
-<h2>Alterar Fornecedor</h2>
+<div style="position: relative; text-align: center; margin: 20px 0;">
+    <h2 style="margin: 0;">Alterar Fornecedores(a):</h2>
+    <div class="logout" style="position: absolute; right: 0; top: 10%; transform: translateY(-75%);">
+        <form action="logout.php" method="POST">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</div>
 
 <!-- Formulário de busca por ID -->
 <form method="POST" action="alterar_fornecedor.php">
