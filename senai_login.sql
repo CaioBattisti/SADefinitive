@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `fornecedor` (
   `endereco` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `telefone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `contato` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nome_empresa` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `id_funcionario_registro` int DEFAULT NULL,
   PRIMARY KEY (`id_fornecedor`),
   UNIQUE KEY `email` (`email`),
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `fornecedor` (
 -- Despejando dados para a tabela `fornecedor`
 --
 
-INSERT INTO `fornecedor` (`id_fornecedor`, `nome_fornecedor`, `endereco`, `telefone`, `email`, `contato`, `id_funcionario_registro`) VALUES
+INSERT INTO `fornecedor` (`id_fornecedor`, `nome_fornecedor`, `endereco`, `telefone`, `email`, `nome_empresa`, `id_funcionario_registro`) VALUES
 (1, 'Tech Supplies', 'Av. Paulista, 1000', '11912345678', 'contato@techsupplies.com', 'José Silva', NULL),
 (2, 'Gamer Store', 'Rua dos Gamers, 200', '21912345678', 'contato@gamerstore.com', 'Marcos Souza', NULL),
 (3, 'Eletrônicos BR', 'Av. Brasil, 300', '31912345678', 'contato@eletronicosbr.com', 'Fernanda Lima', NULL),

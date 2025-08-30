@@ -37,25 +37,25 @@ $permissoes = [
 $opcoes_menu = $permissoes[$id_perfil];
 
 // Inicializa variável
-$usuario = null;
-$busca_usuario = "";
+$fornecedor = null;
+$id_busca = "";
 
-// Se recebeu ID pela URL (via buscar_usuario.php) ou via formulário de busca
-if (isset($_GET['id']) || isset($_POST['busca_usuario'])) {
-    $busca = isset($_GET['id']) ? $_GET['id'] : $_POST['busca_usuario'];
-    $busca_usuario = $busca;
+// Se recebeu ID pela URL (via buscar_fornecedor.php) ou via formulário de busca
+if (isset($_GET['id']) || isset($_POST['id_busca'])) {
+    $id = isset($_GET['id']) ? $_GET['id'] : $_POST['id_busca'];
+    $id_busca = $id;
 
-    $stmt = $pdo->prepare("SELECT * FROM usuario WHERE id_usuario = :busca");
-    $stmt->bindParam(':busca', $busca, PDO::PARAM_INT);
+    $stmt = $pdo->prepare("SELECT * FROM fornecedor WHERE id_fornecedor = :id");
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+    $fornecedor = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Alterar usuario</title>
+    <title>Alterar Fornecedor</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
 </head>
@@ -75,51 +75,37 @@ if (isset($_GET['id']) || isset($_POST['busca_usuario'])) {
     </ul>
 </nav>
 
-<div style="position: relative; text-align: center; margin: 20px 0;">
-    <h2 style="margin: 0;">Alterar Usuário(a):</h2>
-    <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
-        <form action="logout.php" method="POST">
-            <button type="submit">Logout</button>
-        </form>
-    </div>
-</div>
+<h2>Alterar Fornecedor</h2>
 
 <!-- Formulário de busca por ID -->
-<form method="POST" action="alterar_usuario.php">
-    <label for="busca_usuario">Digite o ID do Usuário(a):</label>
-    <input type="number" name="busca_usuario" id="busca_usuario" value="<?= htmlspecialchars($busca_usuario) ?>">
+<form method="POST" action="alterar_fornecedor.php">
+    <label for="id_busca">Digite o ID do Fornecedor:</label>
+    <input type="number" name="id_busca" id="id_busca" value="<?= htmlspecialchars($id_busca) ?>">
     <button type="submit">Buscar</button>
 </form>
 <br>
 
-<?php if ($usuario): ?>
-<form method="POST" action="processa_alteracao_usuario.php">
-    <input type="hidden" name="id_usuario" value="<?= $usuario['id_usuario'] ?>">
+<?php if ($fornecedor): ?>
+<form method="POST" action="processa_alterar_fornecedor.php">
+    <input type="hidden" name="id_fornecedor" value="<?= $fornecedor['id_fornecedor'] ?>">
 
-    <label>Nome do Usuário(a):</label>
-    <input type="text" name="nome" value="<?= htmlspecialchars($usuario['nome']) ?>" required>
+    <label>Nome do Fornecedor(a):</label>
+    <input type="text" name="nome_fornecedor" value="<?= htmlspecialchars($fornecedor['nome_fornecedor']) ?>" required>
 
     <label>Endereço:</label>
-    <input type="text" name="email" value="<?= htmlspecialchars($usuario['email']) ?>">
+    <input type="text" name="endereco" value="<?= htmlspecialchars($fornecedor['endereco']) ?>">
 
-    <label for="id_perfil">Perfil:</label>
-        <select id="id_perfil" name="id_perfil">
-            <option value="1" <?= $usuario['id_perfil'] == 1 ? 'selected' : '' ?>>Administrador</option>
-            <option value="2" <?= $usuario['id_perfil'] == 2 ? 'selected' : '' ?>>Secretária</option>
-            <option value="3" <?= $usuario['id_perfil'] == 3 ? 'selected' : '' ?>>Almoxarife</option>
-            <option value="4" <?= $usuario['id_perfil'] == 4 ? 'selected' : '' ?>>Cliente</option>
-        </select>
+    <label>Telefone:</label>
+    <input type="text" name="telefone" value="<?= htmlspecialchars($fornecedor['telefone']) ?>">
 
-        <?php if ($_SESSION['perfil'] == 1): ?>
-                <label for="nova_senha">Nova Senha:</label>
-                <input type="password" id="nova_senha" name="nova_senha" placeholder="Digite a nova senha (opcional)">
-        <?php endif; ?>
+    <label>Email:</label>
+    <input type="email" name="email" value="<?= htmlspecialchars($fornecedor['email']) ?>" required>
     
     <button type="submit">Salvar Alterações</button>
-    <button type="button" onclick="window.location.href='buscar_usuario.php'">Cancelar</button>
+    <button type="button" onclick="window.location.href='buscar_fornecedor.php'">Cancelar</button>
 </form>
-<?php elseif ($busca_usuario !== ""): ?>
-    <p>Nenhum Usuário encontrado para o ID informado!</p>
+<?php elseif ($id_busca !== ""): ?>
+    <p>Nenhum fornecedor encontrado para o ID informado!</p>
 <?php endif; ?>
 
 <a href="principal.php">Voltar Para o Menu</a>
