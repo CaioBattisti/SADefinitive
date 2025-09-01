@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once 'conexao.php';
-
+$permissoes=[];
 // Verifica se usuário está logado
 if (!isset($_SESSION['usuario'])) {
     header("Location: index.php");
@@ -10,12 +10,11 @@ if (!isset($_SESSION['usuario'])) {
 
 // Obtendo o Nome do Perfil do Usuario Logado
 $id_perfil = $_SESSION['perfil'];
-$sqlPerfil = "SELECT nome_perfil FROM perfil WHERE id_perfil = :id_perfil";
+$sqlPerfil = "SELECT nome FROM usuario WHERE id_usuario = :id_usuario";
 $stmtPerfil = $pdo->prepare($sqlPerfil);
-$stmtPerfil->bindParam(':id_perfil', $id_perfil);
+$stmtPerfil->bindParam(':id_usuario', $id_perfil);
 $stmtPerfil->execute();
 $perfil = $stmtPerfil->fetch(PDO::FETCH_ASSOC);
-$nome_perfil = $perfil['nome_perfil'];
 
 // Definição das Permissões por Perfil
 $permissoes = [
@@ -45,16 +44,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['busca'])) {
     $busca = trim($_POST['busca']);
 
     if (is_numeric($busca)) {
-        $sql = "SELECT r.*, f.nome_fornecedor FROM remedio r JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor WHERE r.id_remedio = :busca ORDER BY r.nome_remedio ASC";
+        $sql = "SELECT r.*, f.nome_empresa FROM remedio r JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor WHERE r.id_remedio = :busca ORDER BY r.nome_remedio ASC";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':busca', $busca, PDO::PARAM_INT);
     } else {
-        $sql = "SELECT r.*, f.nome_fornecedor FROM remedio r JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor WHERE r.nome_remedio LIKE :busca_nome ORDER BY r.nome_remedio ASC";
+        $sql = "SELECT r.*, f.nome_empresa FROM remedio r JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor WHERE r.nome_remedio LIKE :busca_nome ORDER BY r.nome_remedio ASC";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':busca_nome', "%$busca%", PDO::PARAM_STR);
     }
 } else {
-    $sql = "SELECT r.*, f.nome_fornecedor FROM remedio r JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor ORDER BY r.nome_remedio ASC";
+    $sql = "SELECT r.*, f.nome_empresa FROM remedio r JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor ORDER BY r.nome_remedio ASC";
     $stmt = $pdo->prepare($sql);
 }
 
@@ -66,7 +65,7 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar Remédios</title>
+    <title>Buscar remédios</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
 </head>
@@ -98,7 +97,7 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <form action="buscar_remedio.php" method="POST">
-        <label for="busca">Digite o ID ou o Nome do Remédio:</label>
+        <label for="busca">Digite o ID ou o Nome:</label>
         <input type="text" id="busca" name="busca">
         <button type="submit">Pesquisar</button>
     </form>   
@@ -110,9 +109,10 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Nome</th>
                 <th>Descrição</th>
                 <th>Validade</th>
-                <th>Qtd Estoque</th>
-                <th>Preço Unit.</th>
-                <th>Fornecedor</th>
+                <th>Tipo</th>
+                <th>Quantidade</th>
+                <th>Valor Unitário</th>
+                <th>Empresas</th>
                 <th>Ações</th>
             </tr>
         <?php foreach ($remedios as $remedio): ?>
@@ -121,9 +121,10 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($remedio['nome_remedio']) ?></td>
                 <td><?= htmlspecialchars($remedio['descricao']) ?></td>
                 <td><?= htmlspecialchars($remedio['validade']) ?></td>
+                <td><?= htmlspecialchars($remedio['tipo']) ?></td>
                 <td><?= htmlspecialchars($remedio['qnt_estoque']) ?></td>
                 <td><?= htmlspecialchars($remedio['preco_unit']) ?></td>
-                <td><?= htmlspecialchars($remedio['nome_fornecedor']) ?></td>
+                <td><?= htmlspecialchars($remedio['nome_empresa']) ?></td>
                 <td>
                     <a href="alterar_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>">Alterar</a>
                     <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem Certeza que deseja Excluir esse remédio?')">Excluir</a>

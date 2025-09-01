@@ -15,7 +15,6 @@ $stmtPerfil = $pdo->prepare($sqlPerfil);
 $stmtPerfil->bindParam(':id_perfil', $id_perfil);
 $stmtPerfil->execute();
 $perfil = $stmtPerfil->fetch(PDO::FETCH_ASSOC);
-$nome_perfil = $perfil['nome_perfil'];
 
 // Definição das Permissões por Perfil
 $permissoes = [
@@ -37,53 +36,54 @@ $permissoes = [
 // Obtendo as Opções Disponiveis para o Perfil Logado
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Verifica se o usuario tem permissão para cadastrar remedios
-if (!in_array("cadastro_remedio.php", $opcoes_menu["Cadastrar"])) {
-    echo "Acesso Negado";
-    exit();
-}
-
 // Processa o formulário
-if($_SERVER['REQUEST_METHOD'] =="POST"){
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $nome_remedio = trim($_POST['nome_remedio']);
     $descricao = trim($_POST['descricao']);
     $validade = $_POST['validade'];
     $qnt_estoque = $_POST['qnt_estoque'];
     $preco_unit = $_POST['preco_unit'];
+    $tipo = $_POST['tipo'];
     $id_fornecedor = $_POST['id_fornecedor'];
 
     $errors = [];
 
-    // Validação da validade
-    if (empty($validade) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $validade)) {
-        $errors[] = "Digite uma data de validade válida (YYYY-MM-DD)!";
+    if (empty($nome_remedio)) {
+        $errors[] = "O nome do remédio é obrigatório!";
     }
 
-    // Se houver erros, mostra alerta
+    if (!is_numeric($qnt_estoque) || $qnt_estoque < 0) {
+        $errors[] = "Quantidade inválida!";
+    }
+
+    if (!is_numeric($preco_unit) || $preco_unit < 0) {
+        $errors[] = "Preço unitário inválido!";
+    }
+
     if (count($errors) > 0) {
         echo "<script>alert('" . implode("\\n", $errors) . "');history.back();</script>";
         exit;
     }
 
-    // Cadastro do remedio
-    $sql = "INSERT INTO remedio (nome_remedio, descricao, validade, qnt_estoque, preco_unit, id_fornecedor) VALUES (:nome_remedio, :descricao, :validade, :qnt_estoque, :preco_unit, :id_fornecedor)";
+    $sql = "INSERT INTO remedio (nome_remedio, descricao, validade, qnt_estoque, preco_unit, tipo, id_fornecedor) VALUES (:nome_remedio, :descricao, :validade, :qnt_estoque, :preco_unit, :tipo, :id_fornecedor)";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':nome_remedio', $nome_remedio);
     $stmt->bindParam(':descricao', $descricao);
     $stmt->bindParam(':validade', $validade);
-    $stmt->bindParam(':qnt_estoque', $qnt_estoque, PDO::PARAM_INT);
+    $stmt->bindParam(':qnt_estoque', $qnt_estoque);
     $stmt->bindParam(':preco_unit', $preco_unit);
-    $stmt->bindParam(':id_fornecedor', $id_fornecedor, PDO::PARAM_INT);
+    $stmt->bindParam(':tipo', $tipo);
+    $stmt->bindParam(':id_fornecedor', $id_fornecedor);
 
-    if($stmt->execute()){
+    if ($stmt->execute()) {
         echo "<script>alert('Remédio cadastrado com sucesso!');window.location.href='cadastro_remedio.php';</script>";
     } else {
-        echo "<script>alert('Erro ao cadastrar remédio!');history.back();</script>";
+        echo "<script>alert('Erro ao cadastrar remédio');history.back();</script>";
     }
 }
 
 // Obtém a lista de fornecedores para o dropdown
-$sql_fornecedores = "SELECT id_fornecedor, nome_fornecedor FROM fornecedor ORDER BY nome_fornecedor";
+$sql_fornecedores = "SELECT id_fornecedor, nome_empresa FROM fornecedor ORDER BY nome_empresa";
 $stmt_fornecedores = $pdo->prepare($sql_fornecedores);
 $stmt_fornecedores->execute();
 $fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
@@ -93,7 +93,7 @@ $fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Remédio</title>
+    <title>Cadastro de remédio</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
 </head>
@@ -116,7 +116,7 @@ $fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
     </nav>
 
     <div style="position: relative; text-align: center; margin: 20px 0;">
-        <h2 style="margin: 0;">Cadastrar Remédios:</h2>
+        <h2 style="margin: 0;">Cadastro de Remédios:</h2>
         <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
             <form action="logout.php" method="POST">
                 <button type="submit">Logout</button>
@@ -125,7 +125,7 @@ $fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <form action="cadastro_remedio.php" method="POST" id="formCadastro">
-        <label for="nome_remedio">Nome do Remédio:</label>
+        <label for="nome_remedio">Nome do remédio:</label>
         <input type="text" id="nome_remedio" name="nome_remedio" required>
 
         <label for="descricao">Descrição:</label>
@@ -139,12 +139,21 @@ $fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
 
         <label for="preco_unit">Preço Unitário:</label>
         <input type="number" step="0.01" id="preco_unit" name="preco_unit" min="0" required>
+        
+        <label for="tipo">Tipo:</label>
+        <select id="tipo" name="tipo" required>
+            <option value="Comprimido">Comprimido</option>
+            <option value="Gota">Gota</option>
+            <option value="Creme">Creme</option>
+            <option value="Injeção">Injeção</option>
+            <option value="Inalação">Inalação</option>
+        </select>
 
-        <label for="id_fornecedor">Fornecedor:</label>
+        <label for="id_fornecedor">Empresas:</label>
         <select id="id_fornecedor" name="id_fornecedor" required>
             <?php foreach ($fornecedores as $fornecedor): ?>
                 <option value="<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>">
-                    <?= htmlspecialchars($fornecedor['nome_fornecedor']) ?>
+                    <?= htmlspecialchars($fornecedor['nome_empresa']) ?>
                 </option>
             <?php endforeach; ?>
         </select>
@@ -152,9 +161,6 @@ $fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
         <button type="submit">Salvar</button>
         <button type="reset">Cancelar</button>
     </form>
-
     <a href="principal.php">Voltar Para o Menu</a>
-
-    <script src="Mascara/script.js"></script>
 </body>
 </html>
