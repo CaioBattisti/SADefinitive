@@ -85,22 +85,22 @@ INSERT INTO `fornecedor` (`id_fornecedor`, `nome_fornecedor`, `endereco`, `telef
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `fornecedor_produto`
+-- Estrutura para tabela `fornecedor_remedio`
 --
 
-DROP TABLE IF EXISTS `fornecedor_produto`;
-CREATE TABLE IF NOT EXISTS `fornecedor_produto` (
+DROP TABLE IF EXISTS `fornecedor_remedio`;
+CREATE TABLE IF NOT EXISTS `fornecedor_remedio` (
   `id_fornecedor` int NOT NULL,
-  `id_produto` int NOT NULL,
-  PRIMARY KEY (`id_fornecedor`,`id_produto`),
-  KEY `id_produto` (`id_produto`)
+  `id_remedio` int NOT NULL,
+  PRIMARY KEY (`id_fornecedor`,`id_remedio`),
+  KEY `id_remedio` (`id_remedio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Despejando dados para a tabela `fornecedor_produto`
+-- Despejando dados para a tabela `fornecedor_remedio`
 --
 
-INSERT INTO `fornecedor_produto` (`id_fornecedor`, `id_produto`) VALUES
+INSERT INTO `fornecedor_remedio` (`id_fornecedor`, `id_remedio`) VALUES
 (1, 1),
 (2, 2),
 (3, 3),
@@ -154,38 +154,26 @@ CREATE TABLE IF NOT EXISTS `perfil` (
 
 INSERT INTO `perfil` (`id_perfil`, `nome_perfil`) VALUES
 (1, 'Adm'),
-(3, 'Almoxarife'),
-(4, 'Cliente'),
-(2, 'Secretaria');
+(2, 'Secretário(a)'),
+(3, 'funcionario(a)'),
+(4, 'fornecedor(a)');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `produto`
+-- Estrutura para tabela `remedio`
 --
 
-DROP TABLE IF EXISTS `produto`;
-CREATE TABLE IF NOT EXISTS `produto` (
-  `id_produto` int NOT NULL AUTO_INCREMENT,
-  `nome_prod` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `descricao` text COLLATE utf8mb4_unicode_ci,
-  `qtde` int DEFAULT '0',
-  `valor_unit` decimal(10,2) DEFAULT NULL,
-  PRIMARY KEY (`id_produto`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Despejando dados para a tabela `produto`
---
-
-INSERT INTO `produto` (`id_produto`, `nome_prod`, `descricao`, `qtde`, `valor_unit`) VALUES
-(1, 'Notebook Dell', 'Intel i7, 16GB RAM, SSD 512GB', 10, 4500.00),
-(2, 'Mouse Gamer', 'RGB, 16000 DPI', 50, 150.00),
-(3, 'Teclado Mecânico', 'Switch Azul, RGB', 30, 300.00),
-(4, 'Monitor 24\"', 'Full HD, 75Hz', 20, 800.00),
-(5, 'Extintor', 'A base de CO2', 17, 78.23);
-
--- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS 'remedio' (
+  'id_remedio' INT AUTO_INCREMENT PRIMARY KEY,
+  'nome_remedio' VARCHAR(100) NOT NULL,
+  'descricao' varchar(200) NOT NULL,
+  'validade DATE' NOT NULL,
+  'qnt_estoque' INT NOT NULL,
+  'preco_unit' INT NOT NULL,
+  'id_fornecedor' INT NOT NULL,
+  FOREIGN KEY ('id_fornecedor') REFERENCES fornecedor('id_fornecedor')
+); ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Estrutura para tabela `usuario`
@@ -210,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 
 INSERT INTO `usuario` (`id_usuario`, `nome`, `senha`, `email`, `id_perfil`, `senha_temporaria`) VALUES
 (1, 'Administrador', '$2y$10$rIJhd7oXSRM1XbAdQCEsA.PF3n/rxNtIAUqCkcFybzE5J.mLBsq.q', 'admin@admin', 1, 0),
-(2, 'Sergio Luiz da Silveira', '$2y$10$AKaq2b1ZyNzZs5u6ueiJq.t5xj02aj0aroz4IjHDPhdAsrhZL8MO.', 'sergio@sergio', 1, 1),
+(2, 'Sergio Luiz da Silveira', '$2y$10$AKaq2b1ZyNzZs5u6ueiJq.t5xj02aj0aroz4IjHDPhdAsrhZL8MO.', 'sergio@sergio', 1, 0),
 (6, 'Maria Souza', '$2y$10$RRDyLe.N/SHniQ03fG3mnuRN84K/D4wVS3BkftU7nUUFEqyOhwFDu', 'maria@empresa.com', 2, 0),
 (7, 'Carlos Mendes', '$2y$10$RRDyLe.N/SHniQ03fG3mnuRN84K/D4wVS3BkftU7nUUFEqyOhwFDu', 'carlos@empresa.com', 3, 0),
 (8, 'Ana Pereira', '$2y$10$xaWdXzOzYETic/DhbeHV2OZCAgBaOJzqo9j38DeAEKV2.grcV.L3u', 'ana@empresa.com', 4, 0),
@@ -235,11 +223,11 @@ ALTER TABLE `fornecedor`
   ADD CONSTRAINT `fk_fornecedor_funcionario` FOREIGN KEY (`id_funcionario_registro`) REFERENCES `funcionario` (`id_funcionario`) ON DELETE SET NULL;
 
 --
--- Restrições para tabelas `fornecedor_produto`
+-- Restrições para tabelas `fornecedor_remedio`
 --
-ALTER TABLE `fornecedor_produto`
-  ADD CONSTRAINT `fornecedor_produto_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedor` (`id_fornecedor`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fornecedor_produto_ibfk_2` FOREIGN KEY (`id_produto`) REFERENCES `produto` (`id_produto`) ON DELETE CASCADE;
+ALTER TABLE `fornecedor_remedio`
+  ADD CONSTRAINT `fornecedor_remedio_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedor` (`id_fornecedor`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fornecedor_remedio_ibfk_2` FOREIGN KEY (`id_remedio`) REFERENCES `remedio` (`id_remedio`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `usuario`

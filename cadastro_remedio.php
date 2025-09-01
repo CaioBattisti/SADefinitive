@@ -37,37 +37,26 @@ $permissoes = [
 // Obtendo as Opções Disponiveis para o Perfil Logado
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Verifica se o usuario tem permissão de ADM
-if ($_SESSION['perfil'] != 1) {
+// Verifica se o usuario tem permissão para cadastrar remedios
+if (!in_array("cadastro_remedio.php", $opcoes_menu["Cadastrar"])) {
     echo "Acesso Negado";
     exit();
 }
 
 // Processa o formulário
 if($_SERVER['REQUEST_METHOD'] =="POST"){
-    $nome = trim($_POST['nome']);
-    $email = trim($_POST['email']);
-    $senha = $_POST['senha'];
-    $id_perfil_form = $_POST['id_perfil'];
+    $nome_remedio = trim($_POST['nome_remedio']);
+    $descricao = trim($_POST['descricao']);
+    $validade = $_POST['validade'];
+    $qnt_estoque = $_POST['qnt_estoque'];
+    $preco_unit = $_POST['preco_unit'];
+    $id_fornecedor = $_POST['id_fornecedor'];
 
     $errors = [];
 
-     // Verificação: nome do usuario não pode conter números ou caracteres especiais
-     if (!preg_match("/^[A-Za-zÀ-ÿ\s]+$/", $nome)) {
-        $errors[] = "O nome do Usuário não pode conter números ou caracteres especiais!";
-    }
-
-    // Validação do email
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Digite um email válido!";
-    }
-
-    // Verifica se o email já existe no banco
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM usuario WHERE email = :email");
-    $stmt->bindParam(':email', $email);
-    $stmt->execute();
-    if ($stmt->fetchColumn() > 0) {
-        $errors[] = "Este email já está cadastrado!";
+    // Validação da validade
+    if (empty($validade) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $validade)) {
+        $errors[] = "Digite uma data de validade válida (YYYY-MM-DD)!";
     }
 
     // Se houver erros, mostra alerta
@@ -76,33 +65,39 @@ if($_SERVER['REQUEST_METHOD'] =="POST"){
         exit;
     }
 
-    // Cadastro do usuário
-    $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO usuario (nome, email, senha, id_perfil) VALUES (:nome, :email, :senha, :id_perfil)";
+    // Cadastro do remedio
+    $sql = "INSERT INTO remedio (nome_remedio, descricao, validade, qnt_estoque, preco_unit, id_fornecedor) VALUES (:nome_remedio, :descricao, :validade, :qnt_estoque, :preco_unit, :id_fornecedor)";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':nome', $nome);
-    $stmt->bindParam(':email', $email);
-    $stmt->bindParam(':senha', $senhaHash);
-    $stmt->bindParam(':id_perfil', $id_perfil_form);
+    $stmt->bindParam(':nome_remedio', $nome_remedio);
+    $stmt->bindParam(':descricao', $descricao);
+    $stmt->bindParam(':validade', $validade);
+    $stmt->bindParam(':qnt_estoque', $qnt_estoque, PDO::PARAM_INT);
+    $stmt->bindParam(':preco_unit', $preco_unit);
+    $stmt->bindParam(':id_fornecedor', $id_fornecedor, PDO::PARAM_INT);
 
     if($stmt->execute()){
-        echo "<script>alert('Usuário cadastrado com sucesso!');window.location.href='cadastro_usuario.php';</script>";
-    }else{
-        echo "<script>alert('Erro ao cadastrar usuário!');history.back();</script>";
+        echo "<script>alert('Remédio cadastrado com sucesso!');window.location.href='cadastro_remedio.php';</script>";
+    } else {
+        echo "<script>alert('Erro ao cadastrar remédio!');history.back();</script>";
     }
 }
+
+// Obtém a lista de fornecedores para o dropdown
+$sql_fornecedores = "SELECT id_fornecedor, nome_fornecedor FROM fornecedor ORDER BY nome_fornecedor";
+$stmt_fornecedores = $pdo->prepare($sql_fornecedores);
+$stmt_fornecedores->execute();
+$fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Usuario</title>
+    <title>Cadastro de Remédio</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
 </head>
 <body>
-    <!-- Menu Dropdown -->
     <nav>
         <ul class="menu">
             <?php foreach ($opcoes_menu as $categoria => $arquivos): ?>
@@ -121,7 +116,7 @@ if($_SERVER['REQUEST_METHOD'] =="POST"){
     </nav>
 
     <div style="position: relative; text-align: center; margin: 20px 0;">
-        <h2 style="margin: 0;">Cadastrar Usuarios(a):</h2>
+        <h2 style="margin: 0;">Cadastrar Remédios:</h2>
         <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
             <form action="logout.php" method="POST">
                 <button type="submit">Logout</button>
@@ -129,22 +124,29 @@ if($_SERVER['REQUEST_METHOD'] =="POST"){
         </div>
     </div>
 
-    <form action="cadastro_usuario.php" method="POST" id="formCadastro">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required>
+    <form action="cadastro_remedio.php" method="POST" id="formCadastro">
+        <label for="nome_remedio">Nome do Remédio:</label>
+        <input type="text" id="nome_remedio" name="nome_remedio" required>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+        <label for="descricao">Descrição:</label>
+        <textarea id="descricao" name="descricao"></textarea>
 
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha" required>
+        <label for="validade">Validade:</label>
+        <input type="date" id="validade" name="validade" required>
 
-        <label for="id_perfil">Perfil:</label>
-        <select id="id_perfil" name="id_perfil">
-            <option value="1">Administrador</option>
-            <option value="2">Secretaria</option>
-            <option value="3">Funcionário</option>
-            <option value="4">Fornecedor</option>
+        <label for="qnt_estoque">Quantidade em Estoque:</label>
+        <input type="number" id="qnt_estoque" name="qnt_estoque" min="0" required>
+
+        <label for="preco_unit">Preço Unitário:</label>
+        <input type="number" step="0.01" id="preco_unit" name="preco_unit" min="0" required>
+
+        <label for="id_fornecedor">Fornecedor:</label>
+        <select id="id_fornecedor" name="id_fornecedor" required>
+            <?php foreach ($fornecedores as $fornecedor): ?>
+                <option value="<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>">
+                    <?= htmlspecialchars($fornecedor['nome_fornecedor']) ?>
+                </option>
+            <?php endforeach; ?>
         </select>
 
         <button type="submit">Salvar</button>
@@ -153,7 +155,6 @@ if($_SERVER['REQUEST_METHOD'] =="POST"){
 
     <a href="principal.php">Voltar Para o Menu</a>
 
-    <!-- JavaScript externo -->
     <script src="Mascara/script.js"></script>
 </body>
 </html>

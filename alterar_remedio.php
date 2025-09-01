@@ -35,26 +35,32 @@ $permissoes = [
 
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Inicializa variável
-$usuario = null;
-$busca_usuario = "";
+// Inicializa variáveis
+$remedio = null;
+$busca_remedio = "";
 
-// Se recebeu ID pela URL (via buscar_usuario.php) ou via formulário de busca
-if (isset($_GET['id']) || isset($_POST['busca_usuario'])) {
-    $busca = isset($_GET['id']) ? $_GET['id'] : $_POST['busca_usuario'];
-    $busca_usuario = $busca;
+// Se recebeu ID pela URL (via buscar_remedio.php) ou via formulário de busca
+if (isset($_GET['id']) || isset($_POST['busca_remedio'])) {
+    $busca = isset($_GET['id']) ? $_GET['id'] : $_POST['busca_remedio'];
+    $busca_remedio = $busca;
 
-    $stmt = $pdo->prepare("SELECT * FROM usuario WHERE id_usuario = :busca");
+    $stmt = $pdo->prepare("SELECT * FROM remedio WHERE id_remedio = :busca");
     $stmt->bindParam(':busca', $busca, PDO::PARAM_INT);
     $stmt->execute();
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+    $remedio = $stmt->fetch(PDO::FETCH_ASSOC);
 }
+
+// Obtém a lista de fornecedores para o dropdown
+$sql_fornecedores = "SELECT id_fornecedor, nome_fornecedor FROM fornecedor ORDER BY nome_fornecedor";
+$stmt_fornecedores = $pdo->prepare($sql_fornecedores);
+$stmt_fornecedores->execute();
+$fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Alterar usuario</title>
+    <title>Alterar Remédio</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
 </head>
@@ -75,7 +81,7 @@ if (isset($_GET['id']) || isset($_POST['busca_usuario'])) {
 </nav>
 
 <div style="position: relative; text-align: center; margin: 20px 0;">
-    <h2 style="margin: 0;">Alterar Usuário(a):</h2>
+    <h2 style="margin: 0;">Alterar Remédio:</h2>
     <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
         <form action="logout.php" method="POST">
             <button type="submit">Logout</button>
@@ -83,42 +89,47 @@ if (isset($_GET['id']) || isset($_POST['busca_usuario'])) {
     </div>
 </div>
 
-<!-- Formulário de busca por ID -->
-<form method="POST" action="alterar_usuario.php">
-    <label for="busca_usuario">Digite o ID do Usuário(a):</label>
-    <input type="number" name="busca_usuario" id="busca_usuario" value="<?= htmlspecialchars($busca_usuario) ?>">
+<form method="POST" action="alterar_remedio.php">
+    <label for="busca_remedio">Digite o ID do Remédio:</label>
+    <input type="number" name="busca_remedio" id="busca_remedio" value="<?= htmlspecialchars($busca_remedio) ?>">
     <button type="submit">Buscar</button>
 </form>
 <br>
 
-<?php if ($usuario): ?>
-<form method="POST" action="processa_alteracao_usuario.php">
-    <input type="hidden" name="id_usuario" value="<?= $usuario['id_usuario'] ?>">
+<?php if ($remedio): ?>
+<form method="POST" action="processa_alteracao_remedio.php">
+    <input type="hidden" name="id_remedio" value="<?= $remedio['id_remedio'] ?>">
 
-    <label>Nome do Usuário(a):</label>
-    <input type="text" name="nome" value="<?= htmlspecialchars($usuario['nome']) ?>" required>
+    <label>Nome do Remédio:</label>
+    <input type="text" name="nome_remedio" value="<?= htmlspecialchars($remedio['nome_remedio']) ?>" required>
 
-    <label>Endereço:</label>
-    <input type="text" name="email" value="<?= htmlspecialchars($usuario['email']) ?>">
+    <label>Descrição:</label>
+    <input type="text" name="descricao" value="<?= htmlspecialchars($remedio['descricao']) ?>">
 
-    <label for="id_perfil">Perfil:</label>
-        <select id="id_perfil" name="id_perfil">
-            <option value="1" <?= $usuario['id_perfil'] == 1 ? 'selected' : '' ?>>Administrador</option>
-            <option value="2" <?= $usuario['id_perfil'] == 2 ? 'selected' : '' ?>>Secretária</option>
-            <option value="3" <?= $usuario['id_perfil'] == 3 ? 'selected' : '' ?>>Funcionario</option>
-            <option value="4" <?= $usuario['id_perfil'] == 4 ? 'selected' : '' ?>>Fornecedor</option>
-        </select>
+    <label>Validade:</label>
+    <input type="date" name="validade" value="<?= htmlspecialchars($remedio['validade']) ?>" required>
 
-        <?php if ($_SESSION['perfil'] == 1): ?>
-                <label for="nova_senha">Nova Senha:</label>
-                <input type="password" id="nova_senha" name="nova_senha" placeholder="Digite a nova senha (opcional)">
-        <?php endif; ?>
+    <label>Quantidade em Estoque:</label>
+    <input type="number" name="qnt_estoque" value="<?= htmlspecialchars($remedio['qnt_estoque']) ?>" required>
+    
+    <label>Preço Unitário:</label>
+    <input type="number" step="0.01" name="preco_unit" value="<?= htmlspecialchars($remedio['preco_unit']) ?>" required>
+
+    <label for="id_fornecedor">Fornecedor:</label>
+    <select id="id_fornecedor" name="id_fornecedor" required>
+        <?php foreach ($fornecedores as $fornecedor): ?>
+            <option value="<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>" 
+                <?= $remedio['id_fornecedor'] == $fornecedor['id_fornecedor'] ? 'selected' : '' ?>>
+                <?= htmlspecialchars($fornecedor['nome_fornecedor']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
     
     <button type="submit">Salvar Alterações</button>
-    <button type="button" onclick="window.location.href='buscar_usuario.php'">Cancelar</button>
+    <button type="button" onclick="window.location.href='buscar_remedio.php'">Cancelar</button>
 </form>
-<?php elseif ($busca_usuario !== ""): ?>
-    <p>Nenhum Usuário encontrado para o ID informado!</p>
+<?php elseif ($busca_remedio !== ""): ?>
+    <p>Nenhum remédio encontrado para o ID informado!</p>
 <?php endif; ?>
 
 <a href="principal.php">Voltar Para o Menu</a>

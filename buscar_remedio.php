@@ -38,38 +38,35 @@ $permissoes = [
 $opcoes_menu = $permissoes[$id_perfil];
 
 // Inicializa a variavel para evitar Erros
-$usuarios = [];
+$remedios = [];
 
-// Se o Formulário for Enviado, Busca o usuario pelo id ou nome
+// Se o Formulário for Enviado, Busca o remedio pelo id ou nome
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['busca'])) {
     $busca = trim($_POST['busca']);
 
     if (is_numeric($busca)) {
-        $sql = "SELECT * FROM usuario WHERE id_usuario = :busca ORDER BY nome ASC";
+        $sql = "SELECT r.*, f.nome_fornecedor FROM remedio r JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor WHERE r.id_remedio = :busca ORDER BY r.nome_remedio ASC";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':busca', $busca, PDO::PARAM_INT);
     } else {
-        // Busca apenas pelo PRIMEIRO nome
-        $sql = "SELECT * FROM usuario 
-                WHERE SUBSTRING_INDEX(nome, ' ', 1) LIKE :busca_nome 
-                ORDER BY nome ASC";
+        $sql = "SELECT r.*, f.nome_fornecedor FROM remedio r JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor WHERE r.nome_remedio LIKE :busca_nome ORDER BY r.nome_remedio ASC";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':busca_nome', "$busca%", PDO::PARAM_STR);
+        $stmt->bindValue(':busca_nome', "%$busca%", PDO::PARAM_STR);
     }
 } else {
-    $sql = "SELECT * FROM usuario ORDER BY nome ASC";
+    $sql = "SELECT r.*, f.nome_fornecedor FROM remedio r JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor ORDER BY r.nome_remedio ASC";
     $stmt = $pdo->prepare($sql);
 }
 
 $stmt->execute();
-$usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar Usuários</title>
+    <title>Buscar Remédios</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
 </head>
@@ -92,7 +89,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </nav>
 
     <div style="position: relative; text-align: center; margin: 20px 0;">
-        <h2 style="margin: 0;">Buscar Usuários(a):</h2>
+        <h2 style="margin: 0;">Buscar Remédios:</h2>
         <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
             <form action="logout.php" method="POST">
                 <button type="submit">Logout</button>
@@ -100,43 +97,47 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <form action="buscar_usuario.php" method="POST">
-        <label for="busca">Digite o ID ou o Primeiro Nome:</label>
+    <form action="buscar_remedio.php" method="POST">
+        <label for="busca">Digite o ID ou o Nome do Remédio:</label>
         <input type="text" id="busca" name="busca">
         <button type="submit">Pesquisar</button>
     </form>   
 
-    <?php if (!empty($usuarios)): ?>
+    <?php if (!empty($remedios)): ?>
         <table>
             <tr>
                 <th>ID</th>
                 <th>Nome</th>
-                <th>Email</th>
-                <th>Perfil</th>
+                <th>Descrição</th>
+                <th>Validade</th>
+                <th>Qtd Estoque</th>
+                <th>Preço Unit.</th>
+                <th>Fornecedor</th>
                 <th>Ações</th>
             </tr>
-        <?php foreach ($usuarios as $usuario): ?>
+        <?php foreach ($remedios as $remedio): ?>
             <tr>
-                <td><?= htmlspecialchars($usuario['id_usuario']) ?></td>
-                <td><?= htmlspecialchars($usuario['nome']) ?></td>
-                <td><?= htmlspecialchars($usuario['email']) ?></td>
-                <td><?= htmlspecialchars($usuario['id_perfil']) ?></td>
+                <td><?= htmlspecialchars($remedio['id_remedio']) ?></td>
+                <td><?= htmlspecialchars($remedio['nome_remedio']) ?></td>
+                <td><?= htmlspecialchars($remedio['descricao']) ?></td>
+                <td><?= htmlspecialchars($remedio['validade']) ?></td>
+                <td><?= htmlspecialchars($remedio['qnt_estoque']) ?></td>
+                <td><?= htmlspecialchars($remedio['preco_unit']) ?></td>
+                <td><?= htmlspecialchars($remedio['nome_fornecedor']) ?></td>
                 <td>
-                    <a href="alterar_usuario.php?id=<?= htmlspecialchars($usuario['id_usuario']) ?>">Alterar Usuário</a>
-                    <a href="excluir_usuario.php?id=<?= htmlspecialchars($usuario['id_usuario']) ?>" onclick="return confirm('Tem Certeza que deseja Excluir esse Usuario?')">Excluir Usuário</a>
+                    <a href="alterar_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>">Alterar</a>
+                    <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem Certeza que deseja Excluir esse remédio?')">Excluir</a>
                 </td>
             </tr>
         <?php endforeach; ?>
         </table>
     <?php else: ?>
-        <p>Nenhum Usuário Encontrado.</p>
+        <p>Nenhum Remédio Encontrado.</p>
     <?php endif; ?>
 
     <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['busca'])): ?>
-        <!-- Se buscou alguém, botão volta para mostrar a tabela completa -->
-        <a href="buscar_usuario.php">Voltar</a>
+        <a href="buscar_remedio.php">Voltar</a>
     <?php else: ?>
-        <!-- Se não buscou nada, volta para a tela principal -->
         <a href="principal.php">Voltar para o Menu</a>
     <?php endif; ?>
 </body>

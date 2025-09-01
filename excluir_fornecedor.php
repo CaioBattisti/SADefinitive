@@ -19,28 +19,19 @@ $nome_perfil = $perfil['nome_perfil'];
 
 // Definição das Permissões por Perfil
 $permissoes = [
-    1 => [
-        "Cadastrar"=>["cadastro_usuario.php","cadastro_secretaria.php","cadastro_funcionario.php","cadastro_fornecedor.php","cadastro_remedio.php"],
-        "Buscar"=>["buscar_usuario.php","buscar_secretaria.php","buscar_funcionario.php","buscar_fornecedor.php","buscar_remedio.php"],
-        "Alterar"=>["alterar_usuario.php","alterar_secretaria.php","alterar_funcionario.php","alterar_fornecedor.php","alterar_remedio.php"],
-        "Excluir"=>["excluir_usuario.php","excluir_secretaria.php","excluir_funcionario.php","excluir_fornecedor.php","excluir_remedio.php"]
-    ],
-    2 => [
-        "Cadastrar"=>["cadastro_remedio.php"],
-        "Buscar"=>["buscar_remedio.php","buscar_funcionario.php","buscar_fornecedor.php"],
-        "Alterar"=>["alterar_funcionario.php","alterar_fornecedor.php"]
-    ],
-    3 => [
-        "Cadastrar"=>["cadastro_remedio.php"],
-        "Buscar"=>["buscar_cliente.php","buscar_fornecedor.php","buscar_remedio.php"],
-        "Alterar"=>["alterar_fornecedor.php","alterar_remedio.php"],
-        "Excluir"=>["excluir_remedio.php"]
-    ],
-    4 => [
-        "Cadastrar"=>["cadastro_cliente.php"],
-        "Buscar"=>["buscar_remedio.php"],
-        "Alterar"=>["alterar_cliente.php"]
-    ],
+    1=>["Cadastrar"=>["cadastro_usuario.php","cadastro_fornecedor.php", "cadastro_remedio.php", "cadastro_funcionario.php"],
+        "Buscar"=>["buscar_usuario.php","buscar_fornecedor.php", "buscar_remedio.php", "buscar_funcionario.php"],
+        "Alterar"=>["alterar_usuario.php","alterar_fornecedor.php", "alterar_remedio.php", "alterar_funcionario.php"],
+        "Excluir"=>["excluir_usuario.php","excluir_fornecedor.php", "excluir_remedio.php", "excluir_funcionario.php"]],
+
+    2=>["Cadastrar"=>["cadastro_remedio.php"],
+        "Buscar"=>["buscar_fornecedor.php", "buscar_remedio.php"],
+        "Alterar"=>["alterar_remedio.php"]],
+
+    3=>["Cadastrar"=>["cadastro_remedio.php"],
+        "Buscar"=>["buscar_remedio.php"]],
+
+    4=>["Cadastrar"=>["cadastro_remedio.php"]]
 ];
 
 // Obtendo as opções disponíveis para o perfil logado

@@ -37,39 +37,42 @@ $permissoes = [
 // Obtendo as Opções Disponiveis para o Perfil Logado
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Inicializa a variavel para evitar Erros
-$usuarios = [];
-
-// Se o Formulário for Enviado, Busca o usuario pelo id ou nome
-if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['busca'])) {
-    $busca = trim($_POST['busca']);
-
-    if (is_numeric($busca)) {
-        $sql = "SELECT * FROM usuario WHERE id_usuario = :busca ORDER BY nome ASC";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':busca', $busca, PDO::PARAM_INT);
-    } else {
-        // Busca apenas pelo PRIMEIRO nome
-        $sql = "SELECT * FROM usuario 
-                WHERE SUBSTRING_INDEX(nome, ' ', 1) LIKE :busca_nome 
-                ORDER BY nome ASC";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':busca_nome', "$busca%", PDO::PARAM_STR);
-    }
-} else {
-    $sql = "SELECT * FROM usuario ORDER BY nome ASC";
-    $stmt = $pdo->prepare($sql);
+// Verifica se o usuario tem permissão para excluir remedios
+if ($_SESSION['perfil'] != 1 && $_SESSION['perfil'] != 2) {
+    echo "<script>alert('Acesso Negado!');window.location.href='principal.php';</script>";
+    exit();
 }
 
+// Inicializa a variável de remédios
+$remedios = [];
+
+// Busca todos os remédios cadastrados em ordem alfabética, incluindo o nome do fornecedor
+$sql = "SELECT r.*, f.nome_fornecedor FROM remedio r JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor ORDER BY r.nome_remedio ASC";
+$stmt = $pdo->prepare($sql);
 $stmt->execute();
-$usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Se um id for passado via GET, exclui o remedio
+if(isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $id_remedio = $_GET['id'];
+    
+    $sql = "DELETE FROM remedio WHERE id_remedio = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':id', $id_remedio, PDO::PARAM_INT);
+
+    if($stmt->execute()) {
+        echo "<script>alert('Remédio Excluído Com Sucesso!');window.location.href='excluir_remedio.php';</script>";
+    } else {
+        echo "<script>alert('Erro ao excluir o Remédio.');window.location.href='excluir_remedio.php';</script>";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar Usuários</title>
+    <title>Excluir Remédio</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
 </head>
@@ -92,52 +95,45 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </nav>
 
     <div style="position: relative; text-align: center; margin: 20px 0;">
-        <h2 style="margin: 0;">Buscar Usuários(a):</h2>
-        <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
+        <h2 style="margin: 0;">Excluir Remédios:</h2>
+        <div class="logout" style="position: absolute; right: 0; top: 10%; transform: translateY(-75%);">
             <form action="logout.php" method="POST">
                 <button type="submit">Logout</button>
             </form>
         </div>
     </div>
 
-    <form action="buscar_usuario.php" method="POST">
-        <label for="busca">Digite o ID ou o Primeiro Nome:</label>
-        <input type="text" id="busca" name="busca">
-        <button type="submit">Pesquisar</button>
-    </form>   
-
-    <?php if (!empty($usuarios)): ?>
-        <table>
+    <?php if(!empty($remedios)): ?>
+        <table border="1">
             <tr>
                 <th>ID</th>
                 <th>Nome</th>
-                <th>Email</th>
-                <th>Perfil</th>
+                <th>Descrição</th>
+                <th>Validade</th>
+                <th>Qtd Estoque</th>
+                <th>Preço Unit.</th>
+                <th>Fornecedor</th>
                 <th>Ações</th>
             </tr>
-        <?php foreach ($usuarios as $usuario): ?>
-            <tr>
-                <td><?= htmlspecialchars($usuario['id_usuario']) ?></td>
-                <td><?= htmlspecialchars($usuario['nome']) ?></td>
-                <td><?= htmlspecialchars($usuario['email']) ?></td>
-                <td><?= htmlspecialchars($usuario['id_perfil']) ?></td>
-                <td>
-                    <a href="alterar_usuario.php?id=<?= htmlspecialchars($usuario['id_usuario']) ?>">Alterar Usuário</a>
-                    <a href="excluir_usuario.php?id=<?= htmlspecialchars($usuario['id_usuario']) ?>" onclick="return confirm('Tem Certeza que deseja Excluir esse Usuario?')">Excluir Usuário</a>
-                </td>
-            </tr>
-        <?php endforeach; ?>
+
+            <?php foreach($remedios as $remedio): ?>
+                <tr>
+                    <td><?= htmlspecialchars($remedio['id_remedio']); ?></td>
+                    <td><?= htmlspecialchars($remedio['nome_remedio']); ?></td>
+                    <td><?= htmlspecialchars($remedio['descricao']); ?></td>
+                    <td><?= htmlspecialchars($remedio['validade']); ?></td>
+                    <td><?= htmlspecialchars($remedio['qnt_estoque']); ?></td>
+                    <td><?= htmlspecialchars($remedio['preco_unit']); ?></td>
+                    <td><?= htmlspecialchars($remedio['nome_fornecedor']); ?></td>
+                    <td>
+                        <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']); ?>" onclick="return confirm('Tem Certeza que você deseja excluir este remédio?')">Excluir</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </table>
     <?php else: ?>
-        <p>Nenhum Usuário Encontrado.</p>
+        <p>Nenhum remédio encontrado.</p>
     <?php endif; ?>
-
-    <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['busca'])): ?>
-        <!-- Se buscou alguém, botão volta para mostrar a tabela completa -->
-        <a href="buscar_usuario.php">Voltar</a>
-    <?php else: ?>
-        <!-- Se não buscou nada, volta para a tela principal -->
-        <a href="principal.php">Voltar para o Menu</a>
-    <?php endif; ?>
+    <a href="principal.php">Voltar para o Menu</a>
 </body>
 </html>
