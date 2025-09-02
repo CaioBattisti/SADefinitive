@@ -38,6 +38,14 @@ $permissoes = [
     ]
 ];
 
+// Mapeamento de ícones para as categorias de menu
+$icones_menu = [
+    "Cadastrar" => "fa-solid fa-plus-circle",
+    "Buscar" => "fa-solid fa-search",
+    "Alterar" => "fa-solid fa-edit",
+    "Excluir" => "fa-solid fa-trash-alt"
+];
+
 // Obtendo as Opções Disponíveis para o Perfil Logado
 $opcoes_menu = $permissoes[$id_perfil];
 ?>
@@ -50,7 +58,6 @@ $opcoes_menu = $permissoes[$id_perfil];
     <title>Estoque de Farmácia</title>
     <link rel="stylesheet" href="Estilo/styles.css">
     <link rel="stylesheet" href="Estilo/style.css">
-    <!-- FontAwesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="Mascara/scripts.js"></script>
 </head>
@@ -72,12 +79,11 @@ $opcoes_menu = $permissoes[$id_perfil];
     </header>
 
     <div class="layout">
-        <!-- Sidebar -->
         <nav class="sidebar">
             <ul class="menu">
                 <?php foreach ($opcoes_menu as $categoria => $arquivos): ?>
                     <li class="dropdown">
-                        <a href="#"><i class="fa-solid fa-folder-open"></i> <?= $categoria ?></a>
+                        <a href="#"><i class="<?= $icones_menu[$categoria] ?? 'fa-solid fa-folder-open' ?>"></i> <?= $categoria ?></a>
                         <ul class="dropdown-menu">
                             <?php foreach ($arquivos as $arquivo): ?>
                                 <li>
