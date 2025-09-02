@@ -55,11 +55,15 @@ $opcoes_menu = $permissoes[$id_perfil];
     <script src="Mascara/scripts.js"></script>
 </head>
 <body>
+    <header class="conteudo">
+        <h1><i class="fa-solid fa-prescription-bottle-medical"></i> Sistema de Estoque da Farmácia</h1>
+    </header>
     <header class="topo">
         <div class="saudacao">
             <h2><i class="fa-solid fa-user"></i> Bem-vindo, <?php echo $_SESSION["usuario"]; ?></h2>
             <h3><i class="fa-solid fa-id-badge"></i> <?php echo $nome_perfil; ?></h3>
         </div>
+            <p>Gerenciamento de <b>remédios</b>, <b>fornecedores</b>, <b>funcionários</b> e <b>usuários</b> de forma eficiente e organizada.</p>
         <div class="logout">
             <form action="logout.php" method="POST">
                 <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
@@ -94,12 +98,6 @@ $opcoes_menu = $permissoes[$id_perfil];
                 <?php endforeach; ?>
             </ul>
         </nav>
-
-        <!-- Conteúdo -->
-        <main class="conteudo">
-            <h1><i class="fa-solid fa-prescription-bottle-medical"></i> Sistema de Estoque da Farmácia</h1>
-            <p>Gerencie <b>remédios</b>, <b>fornecedores</b>, <b>funcionários</b> e <b>usuários</b> de forma eficiente e organizada.</p>
-        </main>
     </div>
 </body>
 </html>
