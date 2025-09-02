@@ -2,7 +2,7 @@
 session_start();
 require_once 'conexao.php';
 
-if(!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['usuario'])) {
     header("Location: index.php");
     exit();
 }
@@ -18,22 +18,27 @@ $nome_perfil = $perfil['nome_perfil'];
 
 // Definição das Permissões por Perfil
 $permissoes = [
-    1=>["Cadastrar"=>["cadastro_usuario.php","cadastro_fornecedor.php", "cadastro_remedio.php", "cadastro_funcionario.php"],
-        "Buscar"=>["buscar_usuario.php","buscar_fornecedor.php", "buscar_remedio.php", "buscar_funcionario.php"],
-        "Alterar"=>["alterar_usuario.php","alterar_fornecedor.php", "alterar_remedio.php", "alterar_funcionario.php"],
-        "Excluir"=>["excluir_usuario.php","excluir_fornecedor.php", "excluir_remedio.php", "excluir_funcionario.php"]],
-
-    2=>["Cadastrar"=>["cadastro_remedio.php"],
-        "Buscar"=>["buscar_fornecedor.php", "buscar_remedio.php"],
-        "Alterar"=>["alterar_remedio.php"]],
-
-    3=>["Cadastrar"=>["cadastro_remedio.php"],
-        "Buscar"=>["buscar_remedio.php"]],
-
-    4=>["Cadastrar"=>["cadastro_remedio.php"]]
+    1 => [
+        "Cadastrar" => ["cadastro_usuario.php", "cadastro_fornecedor.php", "cadastro_remedio.php", "cadastro_funcionario.php"],
+        "Buscar" => ["buscar_usuario.php", "buscar_fornecedor.php", "buscar_remedio.php", "buscar_funcionario.php"],
+        "Alterar" => ["alterar_usuario.php", "alterar_fornecedor.php", "alterar_remedio.php", "alterar_funcionario.php"],
+        "Excluir" => ["excluir_usuario.php", "excluir_fornecedor.php", "excluir_remedio.php", "excluir_funcionario.php"]
+    ],
+    2 => [
+        "Cadastrar" => ["cadastro_remedio.php"],
+        "Buscar" => ["buscar_fornecedor.php", "buscar_remedio.php"],
+        "Alterar" => ["alterar_remedio.php"]
+    ],
+    3 => [
+        "Cadastrar" => ["cadastro_remedio.php"],
+        "Buscar" => ["buscar_remedio.php"]
+    ],
+    4 => [
+        "Cadastrar" => ["cadastro_remedio.php"]
+    ]
 ];
 
-// Obtendo as Opções Disponiveis para o Perfil Logado
+// Obtendo as Opções Disponíveis para o Perfil Logado
 $opcoes_menu = $permissoes[$id_perfil];
 ?>
 
@@ -42,37 +47,59 @@ $opcoes_menu = $permissoes[$id_perfil];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Principal</title>
+    <title>Estoque de Farmácia</title>
     <link rel="stylesheet" href="Estilo/styles.css">
+    <link rel="stylesheet" href="Estilo/style.css">
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="Mascara/scripts.js"></script>
 </head>
 <body>
-    <header>
+    <header class="topo">
         <div class="saudacao">
-            <h2>Bem vindo, <?php echo $_SESSION["usuario"]; ?>! Perfil: <?php echo $nome_perfil; ?></h2>
+            <h2><i class="fa-solid fa-user"></i> Bem-vindo, <?php echo $_SESSION["usuario"]; ?></h2>
+            <h3><i class="fa-solid fa-id-badge"></i> <?php echo $nome_perfil; ?></h3>
         </div>
         <div class="logout">
             <form action="logout.php" method="POST">
-                <button type="submit">Logout</button>
+                <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
             </form>
         </div>
     </header>
 
-    <nav>
-        <ul class="menu">
-            <?php foreach ($opcoes_menu as $categoria => $arquivos): ?>
-                <li class="dropdown">
-                    <a href="#"><?= $categoria ?></a>
-                    <ul class="dropdown-menu">
-                        <?php foreach ($arquivos as $arquivo): ?>
-                            <li>
-                                <a href="<?= $arquivo ?>"><?= ucfirst(str_replace("_"," ",basename($arquivo,".php"))) ?></a>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </nav>
+    <div class="layout">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="menu">
+                <?php foreach ($opcoes_menu as $categoria => $arquivos): ?>
+                    <li class="dropdown">
+                        <a href="#"><i class="fa-solid fa-folder-open"></i> <?= $categoria ?></a>
+                        <ul class="dropdown-menu">
+                            <?php foreach ($arquivos as $arquivo): ?>
+                                <li>
+                                    <a href="<?= $arquivo ?>">
+                                        <?php 
+                                            $nome = ucfirst(str_replace("_", " ", basename($arquivo, ".php")));
+                                            if (strpos($nome, "remedio") !== false) echo "<i class='fa-solid fa-capsules'></i> ";
+                                            if (strpos($nome, "usuario") !== false) echo "<i class='fa-solid fa-users'></i> ";
+                                            if (strpos($nome, "fornecedor") !== false) echo "<i class='fa-solid fa-truck'></i> ";
+                                            if (strpos($nome, "funcionario") !== false) echo "<i class='fa-solid fa-user-nurse'></i> ";
+                                            echo $nome;
+                                        ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </nav>
+
+        <!-- Conteúdo -->
+        <main class="conteudo">
+            <h1><i class="fa-solid fa-prescription-bottle-medical"></i> Sistema de Estoque da Farmácia</h1>
+            <p>Gerencie <b>remédios</b>, <b>fornecedores</b>, <b>funcionários</b> e <b>usuários</b> de forma eficiente e organizada.</p>
+        </main>
+    </div>
 </body>
 </html>
