@@ -83,7 +83,6 @@ if (isset($_GET['id']) || isset($_POST['id_busca'])) {
     </div>
 </div>
 
-<!-- Formulário de busca por ID -->
 <form method="POST" action="alterar_fornecedor.php">
     <label for="id_busca">Digite o ID do Fornecedor:</label>
     <input type="number" name="id_busca" id="id_busca" value="<?= htmlspecialchars($id_busca) ?>">

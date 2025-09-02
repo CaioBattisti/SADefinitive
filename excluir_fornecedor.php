@@ -77,7 +77,6 @@ if(isset($_GET['id']) && is_numeric($_GET['id'])) {
     <link rel="stylesheet" href="Estilo/styles.css">
 </head>
 <body>
-    <!-- Menu Dropdown -->
     <nav>
         <ul class="menu">
             <?php foreach ($opcoes_menu as $categoria => $arquivos): ?>

@@ -121,10 +121,10 @@ $fornecedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <tr>
                 <td><?= htmlspecialchars($fornecedor['id_fornecedor']) ?></td>
                 <td><?= htmlspecialchars($fornecedor['nome_fornecedor']) ?></td>
-                <td><?= htmlspecialchars($fornecedor['nome_empresa']) ?></td>
                 <td><?= htmlspecialchars($fornecedor['endereco']) ?></td>
                 <td><?= htmlspecialchars($fornecedor['telefone']) ?></td>
                 <td><?= htmlspecialchars($fornecedor['email']) ?></td>
+                <td><?= htmlspecialchars($fornecedor['nome_empresa']) ?></td>
                 <td>
                     <a href="alterar_fornecedor.php?id=<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>">Alterar Fornecedor</a>
                     <a href="excluir_fornecedor.php?id=<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>" onclick="return confirm('Tem certeza que deseja excluir esse Fornecedor?')">Excluir Fornecedor</a>
@@ -137,10 +137,8 @@ $fornecedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php endif; ?>
 
     <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['busca'])): ?>
-        <!-- Se buscou alguém, botão volta para mostrar a tabela completa -->
         <a href="buscar_fornecedor.php">Voltar</a>
     <?php else: ?>
-        <!-- Se não buscou nada, volta para a tela principal -->
         <a href="principal.php">Voltar para o Menu</a>
     <?php endif; ?>
 </body>

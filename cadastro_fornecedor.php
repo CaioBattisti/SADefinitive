@@ -50,7 +50,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     $telefone = trim($_POST['telefone']);
     $email = trim($_POST['email']);
     $nome_empresa = trim($_POST['nome_empresa']);
-    $id_funcionario_registro = $_SESSION['id_usuario']; 
+    $permissao = "fornecedor(a)";
 
     $errors = [];
 
@@ -71,19 +71,19 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     if (!empty($errors)) {
         // Usa json_encode para evitar problemas de aspas e quebras de linha no JS
-        echo "<script>alert(' . json_encode(implode(\\\n\, $errors)) . ');history.back();</script>";
+        echo "<script>alert(' . json_encode(implode(\"\\n\", $errors)) . ');history.back();</script>";
         exit;
     }
 
-    $sql = "INSERT INTO fornecedor (nome_fornecedor, endereco, telefone, email, nome_empresa, id_funcionario_registro) 
-            VALUES (:nome, :endereco, :telefone, :email, :nome_empresa, :id_funcionario_registro)";
+    $sql = "INSERT INTO fornecedor (nome_fornecedor, endereco, telefone, email, nome_empresa, permissao) 
+            VALUES (:nome, :endereco, :telefone, :email, :nome_empresa, :permissao)";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':nome', $nome);
     $stmt->bindParam(':endereco', $endereco);
     $stmt->bindParam(':telefone', $telefone);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':nome_empresa', $nome_empresa);
-    $stmt->bindParam(':id_funcionario_registro', $id_funcionario_registro);
+    $stmt->bindParam(':permissao', $permissao);
 
     if($stmt->execute()){
         echo "<script>alert('Fornecedor cadastrado com sucesso!');window.location.href='cadastro_fornecedor.php';</script>";
@@ -120,7 +120,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     </nav>
 
     <div style="position: relative; text-align: center; margin: 20px 0;">
-        <h2 style="margin: 0;">cadastro de Fornecedores(a):</h2>
+        <h2 style="margin: 0;">Cadastro de Fornecedores(a):</h2>
         <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
             <form action="logout.php" method="POST">
                 <button type="submit">Logout</button>

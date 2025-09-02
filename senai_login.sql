@@ -18,38 +18,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `senai_login`
+-- Banco de dados: `sa_definitive`
 --
-CREATE DATABASE IF NOT EXISTS `senai_login` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `senai_login`;
-
--- --------------------------------------------------------
-
---
--- Estrutura para tabela `cliente`
---
-
-DROP TABLE IF EXISTS `cliente`;
-CREATE TABLE IF NOT EXISTS `cliente` (
-  `id_cliente` int NOT NULL AUTO_INCREMENT,
-  `nome_cliente` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `endereco` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `telefone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `id_funcionario_responsavel` int DEFAULT NULL,
-  PRIMARY KEY (`id_cliente`),
-  UNIQUE KEY `email` (`email`),
-  KEY `fk_cliente_funcionario` (`id_funcionario_responsavel`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Despejando dados para a tabela `cliente`
---
-
-INSERT INTO `cliente` (`id_cliente`, `nome_cliente`, `endereco`, `telefone`, `email`, `id_funcionario_responsavel`) VALUES
-(2, 'Teresa Lisbon', 'Rua California', '(47)1234-4568', 'teresa@teresa', NULL),
-(3, 'Chefe Bolden', 'Rua dos Bombeiros, 123', '(99)1234-4321', 'bolden@bolden', NULL),
-(4, 'Capitão Hermann', 'Rua do Molys, 123', '(21)6547-7854', 'hermann@hermann', NULL);
+CREATE DATABASE IF NOT EXISTS `sa_definitive` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `sa_definitive`;
 
 -- --------------------------------------------------------
 
@@ -65,46 +37,23 @@ CREATE TABLE IF NOT EXISTS `fornecedor` (
   `telefone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nome_empresa` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `id_funcionario_registro` int DEFAULT NULL,
+  `permissao` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id_fornecedor`),
   UNIQUE KEY `email` (`email`),
-  KEY `fk_fornecedor_funcionario` (`id_funcionario_registro`)
+  KEY `fk_fornecedor_permissao` (`permissao`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Despejando dados para a tabela `fornecedor`
 --
 
-INSERT INTO `fornecedor` (`id_fornecedor`, `nome_fornecedor`, `endereco`, `telefone`, `email`, `nome_empresa`, `id_funcionario_registro`) VALUES
-(1, 'Tech Supplies', 'Av. Paulista, 1000', '11912345678', 'contato@techsupplies.com', 'José Silva', NULL),
-(2, 'Gamer Store', 'Rua dos Gamers, 200', '21912345678', 'contato@gamerstore.com', 'Marcos Souza', NULL),
-(3, 'Eletrônicos BR', 'Av. Brasil, 300', '31912345678', 'contato@eletronicosbr.com', 'Fernanda Lima', NULL),
-(4, 'InfoTech', 'Rua da Tecnologia, 400', '41912345678', 'contato@infotech.com', 'Carlos Mendes', NULL),
-(5, 'Bombeiros Fire Ltda', 'Rua Chicago 214', '(78)8521-1254', 'fire@fire', 'Dick Wolf', NULL);
+INSERT INTO `fornecedor` (`id_fornecedor`, `nome_fornecedor`, `endereco`, `telefone`, `email`, `nome_empresa`, `permissao`) VALUES
+(1, 'José Silva', 'Av. Paulista, 1000', '11912345678', 'contato@techsupplies.com', 'Tech Supplies', 'fornecedor(a)'),
+(2, 'Marcos Souza', 'Rua dos Gamers, 200', '21912345678', 'contato@gamerstore.com', 'Gamer Store', 'fornecedor(a)'),
+(3, 'Fernanda Lima', 'Av. Brasil, 300', '31912345678', 'contato@eletronicosbr.com', 'Eletrônicos BR', 'fornecedor(a)'),
+(4, 'Carlos Mendes', 'Rua da Tecnologia, 400', '41912345678', 'contato@infotech.com', 'InfoTech', 'fornecedor(a)'),
+(5, 'Dick Wolf', 'Rua Chicago 214', '(78)8521-1254', 'fire@fire', 'Bombeiros Fire Ltda', 'fornecedor(a)');
 
--- --------------------------------------------------------
-
---
--- Estrutura para tabela `fornecedor_remedio`
---
-
-DROP TABLE IF EXISTS `fornecedor_remedio`;
-CREATE TABLE IF NOT EXISTS `fornecedor_remedio` (
-  `id_fornecedor` int NOT NULL,
-  `id_remedio` int NOT NULL,
-  PRIMARY KEY (`id_fornecedor`,`id_remedio`),
-  KEY `id_remedio` (`id_remedio`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Despejando dados para a tabela `fornecedor_remedio`
---
-
-INSERT INTO `fornecedor_remedio` (`id_fornecedor`, `id_remedio`) VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4);
 
 -- --------------------------------------------------------
 
@@ -119,20 +68,22 @@ CREATE TABLE IF NOT EXISTS `funcionario` (
   `endereco` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `telefone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `permissao` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id_funcionario`),
-  UNIQUE KEY `email` (`email`)
+  UNIQUE KEY `email` (`email`),
+  KEY `fk_funcionario_permissao` (`permissao`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Despejando dados para a tabela `funcionario`
 --
 
-INSERT INTO `funcionario` (`id_funcionario`, `nome_funcionario`, `endereco`, `telefone`, `email`) VALUES
-(1, 'João Silva', 'Rua X, 500', '11955555555', 'joao@email.com'),
-(2, 'Mariana Oliveira', 'Rua Y, 600', '21966666666', 'mariana@email.com'),
-(3, 'Roberto Santos', 'Rua Z, 700', '31977777777', 'roberto@email.com'),
-(4, 'Camila Ferreira', 'Rua W, 800', '41988888888', 'camila@email.com'),
-(5, 'Jesse Pinkman', 'Rua Novo Mexico, 171', '2132145874', 'jesse@jesse.com');
+INSERT INTO `funcionario` (`id_funcionario`, `nome_funcionario`, `endereco`, `telefone`, `email`, `permissao`) VALUES
+(1, 'João Silva', 'Rua X, 500', '11955555555', 'joao@email.com', 'Adm'),
+(2, 'Mariana Oliveira', 'Rua Y, 600', '21966666666', 'mariana@email.com', 'Secretário(a)'),
+(3, 'Roberto Santos', 'Rua Z, 700', '31977777777', 'roberto@email.com', 'funcionario(a)'),
+(4, 'Camila Ferreira', 'Rua W, 800', '41988888888', 'camila@email.com', 'funcionario(a)'),
+(5, 'Jesse Pinkman', 'Rua Novo Mexico, 171', '2132145874', 'jesse@jesse.com', 'Adm');
 
 -- --------------------------------------------------------
 
@@ -164,16 +115,30 @@ INSERT INTO `perfil` (`id_perfil`, `nome_perfil`) VALUES
 -- Estrutura para tabela `remedio`
 --
 
-CREATE TABLE IF NOT EXISTS 'remedio' (
-  'id_remedio' INT AUTO_INCREMENT PRIMARY KEY,
-  'nome_remedio' VARCHAR(100) NOT NULL,
-  'descricao' varchar(200) NOT NULL,
-  'validade DATE' NOT NULL,
-  'qnt_estoque' INT NOT NULL,
-  'preco_unit' INT NOT NULL,
-  'id_fornecedor' INT NOT NULL,
-  FOREIGN KEY ('id_fornecedor') REFERENCES fornecedor('id_fornecedor')
-); ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+DROP TABLE IF EXISTS `remedio`;
+CREATE TABLE IF NOT EXISTS `remedio` (
+  `id_remedio` int NOT NULL AUTO_INCREMENT,
+  `nome_remedio` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descricao` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `validade` date NOT NULL,
+  `qnt_estoque` int NOT NULL,
+  `preco_unit` decimal(10, 2) NOT NULL,
+  `tipo` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_fornecedor` int NOT NULL,
+  PRIMARY KEY (`id_remedio`),
+  KEY `fk_remedio_fornecedor` (`id_fornecedor`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Despejando dados para a tabela `remedio`
+--
+
+INSERT INTO `remedio` (`id_remedio`, `nome_remedio`, `descricao`, `validade`, `qnt_estoque`, `preco_unit`, `tipo`, `id_fornecedor`) VALUES
+(1, 'Dipirona', 'Analgésico e antitérmico para dores e febre', '2027-01-20', 150, 8.50, 'Comprimido', 1),
+(2, 'Amoxicilina', 'Antibiótico de amplo espectro', '2026-11-15', 75, 25.00, 'Comprimido', 2),
+(3, 'Neosaldina', 'Analgésico e relaxante muscular', '2028-03-10', 200, 12.75, 'Gota', 1),
+(4, 'Cloridrato de Propranolol', 'Betabloqueador para tratamento de hipertensão', '2027-05-22', 90, 35.50, 'Comprimido', 3),
+(5, 'Loratadina', 'Anti-histamínico para alergias', '2026-08-30', 120, 15.20, 'Creme', 2);
 
 --
 -- Estrutura para tabela `usuario`
@@ -211,23 +176,22 @@ INSERT INTO `usuario` (`id_usuario`, `nome`, `senha`, `email`, `id_perfil`, `sen
 --
 
 --
--- Restrições para tabelas `cliente`
---
-ALTER TABLE `cliente`
-  ADD CONSTRAINT `fk_cliente_funcionario` FOREIGN KEY (`id_funcionario_responsavel`) REFERENCES `funcionario` (`id_funcionario`) ON DELETE SET NULL;
-
---
 -- Restrições para tabelas `fornecedor`
 --
 ALTER TABLE `fornecedor`
-  ADD CONSTRAINT `fk_fornecedor_funcionario` FOREIGN KEY (`id_funcionario_registro`) REFERENCES `funcionario` (`id_funcionario`) ON DELETE SET NULL;
+  ADD CONSTRAINT `fk_fornecedor_permissao` FOREIGN KEY (`permissao`) REFERENCES `perfil` (`nome_perfil`) ON DELETE SET NULL;
 
 --
--- Restrições para tabelas `fornecedor_remedio`
+-- Restrições para tabelas `funcionario`
 --
-ALTER TABLE `fornecedor_remedio`
-  ADD CONSTRAINT `fornecedor_remedio_ibfk_1` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedor` (`id_fornecedor`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fornecedor_remedio_ibfk_2` FOREIGN KEY (`id_remedio`) REFERENCES `remedio` (`id_remedio`) ON DELETE CASCADE;
+ALTER TABLE `funcionario`
+  ADD CONSTRAINT `fk_funcionario_permissao` FOREIGN KEY (`permissao`) REFERENCES `perfil` (`nome_perfil`) ON DELETE SET NULL;
+
+--
+-- Restrições para tabelas `remedio`
+--
+ALTER TABLE `remedio`
+  ADD CONSTRAINT `fk_remedio_fornecedor` FOREIGN KEY (`id_fornecedor`) REFERENCES `fornecedor` (`id_fornecedor`);
 
 --
 -- Restrições para tabelas `usuario`
