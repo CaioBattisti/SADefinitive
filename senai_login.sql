@@ -26,6 +26,28 @@ USE `sa_definitive`;
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `perfil`
+
+DROP TABLE IF EXISTS `perfil`;
+CREATE TABLE IF NOT EXISTS `perfil` (
+  `id_perfil` int NOT NULL AUTO_INCREMENT,
+  `nome_perfil` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id_perfil`),
+  UNIQUE KEY `nome_perfil` (`nome_perfil`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Despejando dados para a tabela `perfil`
+--
+INSERT INTO `perfil` (`id_perfil`, `nome_perfil`) VALUES
+(1, 'Adm: Nível Alto de Acesso!'),
+(2, 'Secretária: Nível médio de Acesso'),
+(3, 'Funcionário: Nível de Baixo Acesso'),
+(4, 'Fornecedor: Nível de Muito Baixo Acesso');
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `fornecedor`
 --
 
@@ -46,13 +68,19 @@ CREATE TABLE IF NOT EXISTS `fornecedor` (
 --
 -- Despejando dados para a tabela `fornecedor`
 --
-
 INSERT INTO `fornecedor` (`id_fornecedor`, `nome_fornecedor`, `endereco`, `telefone`, `email`, `nome_empresa`, `permissao`) VALUES
-(1, 'José Silva', 'Av. Paulista, 1000', '11912345678', 'contato@techsupplies.com', 'Tech Supplies', 'fornecedor(a)'),
-(2, 'Marcos Souza', 'Rua dos Gamers, 200', '21912345678', 'contato@gamerstore.com', 'Gamer Store', 'fornecedor(a)'),
-(3, 'Fernanda Lima', 'Av. Brasil, 300', '31912345678', 'contato@eletronicosbr.com', 'Eletrônicos BR', 'fornecedor(a)'),
-(4, 'Carlos Mendes', 'Rua da Tecnologia, 400', '41912345678', 'contato@infotech.com', 'InfoTech', 'fornecedor(a)'),
-(5, 'Dick Wolf', 'Rua Chicago 214', '(78)8521-1254', 'fire@fire', 'Bombeiros Fire Ltda', 'fornecedor(a)');
+(1, 'José Silva', 'Av. Paulista, 1000', '11912345678', 'contato@techsupplies.com', 'Tech Supplies', 'Fornecedor: Nível de Muito Baixo Acesso(a)'),
+(2, 'Marcos Souza', 'Rua dos Gamers, 200', '21912345678', 'contato@gamerstore.com', 'Gamer Store', 'Fornecedor: Nível de Muito Baixo Acesso(a)'),
+(3, 'Fernanda Lima', 'Av. Brasil, 300', '31912345678', 'contato@eletronicosbr.com', 'Eletrônicos BR', 'Fornecedor: Nível de Muito Baixo Acesso(a)'),
+(4, 'Carlos Mendes', 'Rua da Tecnologia, 400', '41912345678', 'contato@infotech.com', 'InfoTech', 'Fornecedor: Nível de Muito Baixo Acesso(a)'),
+(5, 'Dick Wolf', 'Rua Chicago 214', '(78)8521-1254', 'fire@fire', 'Bombeiros Fire Ltda', 'Fornecedor: Nível de Muito Baixo Acesso(a)');
+
+--
+-- ATUALIZAÇÃO: Comando para corrigir o valor incorreto na tabela `fornecedor`.
+--
+UPDATE `fornecedor`
+SET `permissao` = 'Fornecedor: Nível de Muito Baixo Acesso'
+WHERE `permissao` = 'Fornecedor: Nível de Muito Baixo Acesso(a)';
 
 
 -- --------------------------------------------------------
@@ -77,37 +105,20 @@ CREATE TABLE IF NOT EXISTS `funcionario` (
 --
 -- Despejando dados para a tabela `funcionario`
 --
-
 INSERT INTO `funcionario` (`id_funcionario`, `nome_funcionario`, `endereco`, `telefone`, `email`, `permissao`) VALUES
-(1, 'João Silva', 'Rua X, 500', '11955555555', 'joao@email.com', 'Adm'),
-(2, 'Mariana Oliveira', 'Rua Y, 600', '21966666666', 'mariana@email.com', 'Secretário(a)'),
-(3, 'Roberto Santos', 'Rua Z, 700', '31977777777', 'roberto@email.com', 'funcionario(a)'),
-(4, 'Camila Ferreira', 'Rua W, 800', '41988888888', 'camila@email.com', 'funcionario(a)'),
-(5, 'Jesse Pinkman', 'Rua Novo Mexico, 171', '2132145874', 'jesse@jesse.com', 'Adm');
-
--- --------------------------------------------------------
+(1, 'João Silva', 'Rua X, 500', '11955555555', 'joao@email.com', 'Adm: Nível Alto de Acesso!'),
+(2, 'Mariana Oliveira', 'Rua Y, 600', '21966666666', 'mariana@email.com', 'Secretária: Nível médio de Acesso(a)'),
+(3, 'Roberto Santos', 'Rua Z, 700', '31977777777', 'roberto@email.com', 'Funcionário: Nível de Baixo Acesso'),
+(4, 'Camila Ferreira', 'Rua W, 800', '41988888888', 'camila@email.com', 'Funcionário: Nível de Baixo Acesso'),
+(5, 'Jesse Pinkman', 'Rua Novo Mexico, 171', '2132145874', 'jesse@jesse.com', 'Adm: Nível Alto de Acesso!');
 
 --
--- Estrutura para tabela `perfil`
+-- ATUALIZAÇÃO: Comando para corrigir o valor incorreto na tabela `funcionario`.
 --
+UPDATE `funcionario`
+SET `permissao` = 'Secretária: Nível médio de Acesso'
+WHERE `permissao` = 'Secretária: Nível médio de Acesso(a)';
 
-DROP TABLE IF EXISTS `perfil`;
-CREATE TABLE IF NOT EXISTS `perfil` (
-  `id_perfil` int NOT NULL AUTO_INCREMENT,
-  `nome_perfil` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_perfil`),
-  UNIQUE KEY `nome_perfil` (`nome_perfil`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Despejando dados para a tabela `perfil`
---
-
-INSERT INTO `perfil` (`id_perfil`, `nome_perfil`) VALUES
-(1, 'Adm'),
-(2, 'Secretário(a)'),
-(3, 'funcionario(a)'),
-(4, 'fornecedor(a)');
 
 -- --------------------------------------------------------
 
@@ -132,7 +143,6 @@ CREATE TABLE IF NOT EXISTS `remedio` (
 --
 -- Despejando dados para a tabela `remedio`
 --
-
 INSERT INTO `remedio` (`id_remedio`, `nome_remedio`, `descricao`, `validade`, `qnt_estoque`, `preco_unit`, `tipo`, `id_fornecedor`) VALUES
 (1, 'Dipirona', 'Analgésico e antitérmico para dores e febre', '2027-01-20', 150, 8.50, 'Comprimido', 1),
 (2, 'Amoxicilina', 'Antibiótico de amplo espectro', '2026-11-15', 75, 25.00, 'Comprimido', 2),
@@ -143,7 +153,6 @@ INSERT INTO `remedio` (`id_remedio`, `nome_remedio`, `descricao`, `validade`, `q
 --
 -- Estrutura para tabela `usuario`
 --
-
 DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE IF NOT EXISTS `usuario` (
   `id_usuario` int NOT NULL AUTO_INCREMENT,
@@ -160,7 +169,6 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 --
 -- Despejando dados para a tabela `usuario`
 --
-
 INSERT INTO `usuario` (`id_usuario`, `nome`, `senha`, `email`, `id_perfil`, `senha_temporaria`) VALUES
 (1, 'Administrador', '$2y$10$rIJhd7oXSRM1XbAdQCEsA.PF3n/rxNtIAUqCkcFybzE5J.mLBsq.q', 'admin@admin', 1, 0),
 (2, 'Sergio Luiz da Silveira', '$2y$10$AKaq2b1ZyNzZs5u6ueiJq.t5xj02aj0aroz4IjHDPhdAsrhZL8MO.', 'sergio@sergio', 1, 0),

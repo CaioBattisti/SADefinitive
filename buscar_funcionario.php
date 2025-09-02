@@ -2,13 +2,13 @@
 session_start();
 require_once 'conexao.php';
 
-// Verifica se usuário está logado
+// Verifica se o usuário está logado
 if (!isset($_SESSION['usuario'])) {
     header("Location: index.php");
     exit();
 }
 
-// Obtendo o Nome do Perfil do Usuario Logado
+// Obtendo o Nome do Perfil do Usuário Logado
 $id_perfil = $_SESSION['perfil'];
 $sqlPerfil = "SELECT nome_perfil FROM perfil WHERE id_perfil = :id_perfil";
 $stmtPerfil = $pdo->prepare($sqlPerfil);
@@ -38,38 +38,47 @@ $permissoes = [
     ]
 ];
 
-// Obtendo as Opções Disponiveis para o Perfil Logado
+// Obtendo as opções disponíveis para o perfil logado
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Inicializa a variavel para evitar Erros
-$remedios = [];
+// Verifica se o usuário tem permissão de ADM
+if ($_SESSION['perfil'] != 1) {
+    echo "<script>alert('Acesso Negado!');window.location.href='principal.php';</script>";
+    exit();
+}
 
-// Se o Formulário for Enviado, Busca pelo id ou nome do remedio
+// Inicializa a variável para evitar erros
+$funcionarios = [];
+
+// Se o formulário for enviado, busca pelo id ou nome do funcionário
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['busca'])) {
     $busca = trim($_POST['busca']);
-    $sql = "SELECT r.*, f.nome_fornecedor FROM remedio r 
-            LEFT JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor 
-            WHERE r.id_remedio = :busca OR r.nome_remedio LIKE :busca_nome 
-            ORDER BY r.nome_remedio ASC";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':busca', $busca, PDO::PARAM_INT);
-    $stmt->bindValue(':busca_nome', "%$busca%", PDO::PARAM_STR);
+
+    if (is_numeric($busca)) {
+        $sql = "SELECT * FROM funcionario WHERE id_funcionario = :busca ORDER BY nome_funcionario ASC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':busca', $busca, PDO::PARAM_INT);
+    } else {
+        $sql = "SELECT * FROM funcionario 
+                WHERE SUBSTRING_INDEX(nome_funcionario, ' ', 1) LIKE :busca_nome 
+                ORDER BY nome_funcionario ASC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':busca_nome', "$busca%", PDO::PARAM_STR);
+    }
 } else {
-    $sql = "SELECT r.*, f.nome_fornecedor FROM remedio r 
-            LEFT JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor 
-            ORDER BY r.nome_remedio ASC";
+    $sql = "SELECT * FROM funcionario ORDER BY nome_funcionario ASC";
     $stmt = $pdo->prepare($sql);
 }
 
 $stmt->execute();
-$remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$funcionarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar Remédios</title>
+    <title>Buscar Funcionários</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
 </head>
@@ -92,7 +101,7 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </nav>
 
     <div style="position: relative; text-align: center; margin: 20px 0;">
-        <h2 style="margin: 0;">Buscar Remédios:</h2>
+        <h2 style="margin: 0;">Buscar Funcionário(a):</h2>
         <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
             <form action="logout.php" method="POST">
                 <button type="submit">Logout</button>
@@ -100,48 +109,44 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <form action="buscar_remedio.php" method="POST">
-        <label for="busca">Digite o ID ou o Nome do Remédio:</label>
+    <form action="buscar_funcionario.php" method="POST">
+        <label for="busca">Digite o ID ou o Primeiro Nome:</label>
         <input type="text" id="busca" name="busca">
         <button type="submit">Pesquisar</button>
     </form>   
 
-    <?php if (!empty($remedios)): ?>
+    <?php if (!empty($funcionarios)): ?>
         <table>
             <tr>
                 <th>ID</th>
                 <th>Nome</th>
-                <th>Descrição</th>
-                <th>Validade</th>
-                <th>Quantidade</th>
-                <th>Preço Unitário</th>
-                <th>Tipo</th>
-                <th>Fornecedor</th>
+                <th>Endereço</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th>Permissão</th>
                 <th>Ações</th>
             </tr>
-        <?php foreach ($remedios as $remedio): ?>
+        <?php foreach ($funcionarios as $funcionario): ?>
             <tr>
-                <td><?= htmlspecialchars($remedio['id_remedio']) ?></td>
-                <td><?= htmlspecialchars($remedio['nome_remedio']) ?></td>
-                <td><?= htmlspecialchars($remedio['descricao']) ?></td>
-                <td><?= htmlspecialchars($remedio['validade']) ?></td>
-                <td><?= htmlspecialchars($remedio['qnt_estoque']) ?></td>
-                <td><?= htmlspecialchars($remedio['preco_unit']) ?></td>
-                <td><?= htmlspecialchars($remedio['tipo']) ?></td>
-                <td><?= htmlspecialchars($remedio['nome_fornecedor']) ?></td>
+                <td><?= htmlspecialchars($funcionario['id_funcionario']) ?></td>
+                <td><?= htmlspecialchars($funcionario['nome_funcionario']) ?></td>
+                <td><?= htmlspecialchars($funcionario['endereco']) ?></td>
+                <td><?= htmlspecialchars($funcionario['telefone']) ?></td>
+                <td><?= htmlspecialchars($funcionario['email']) ?></td>
+                <td><?= htmlspecialchars($funcionario['permissao']) ?></td>
                 <td>
-                    <a href="alterar_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>">Alterar</a>
-                    <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem certeza que deseja excluir este remédio?')">Excluir</a>
+                    <a href="alterar_funcionario.php?id=<?= htmlspecialchars($funcionario['id_funcionario']) ?>">Alterar</a>
+                    <a href="excluir_funcionario.php?id=<?= htmlspecialchars($funcionario['id_funcionario']) ?>" onclick="return confirm('Tem certeza que deseja excluir esse Funcionário?')">Excluir</a>
                 </td>
             </tr>
         <?php endforeach; ?>
         </table>
     <?php else: ?>
-        <p>Nenhum Remédio Encontrado.</p>
+        <p>Nenhum Funcionário Encontrado.</p>
     <?php endif; ?>
 
     <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['busca'])): ?>
-        <a href="buscar_remedio.php">Voltar</a>
+        <a href="buscar_funcionario.php">Voltar</a>
     <?php else: ?>
         <a href="principal.php">Voltar para o Menu</a>
     <?php endif; ?>

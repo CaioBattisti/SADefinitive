@@ -40,37 +40,37 @@ $permissoes = [
 
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Verifica se o usuário tem permissão de ADM ou Secretária
-if ($_SESSION['perfil'] != 1 && $_SESSION['perfil'] != 2) {
+// Verifica se o usuário tem permissão de ADM
+if ($_SESSION['perfil'] != 1) {
     echo "<script>alert('Acesso Negado!');window.location.href='principal.php';</script>";
     exit();
 }
 
 // Inicializa variáveis
-$remedio = null;
+$funcionario = null;
 $id_busca = "";
 
-// Se recebeu ID pela URL (via buscar_remedio.php) ou via formulário de busca
+// Se recebeu ID pela URL (via buscar_funcionario.php) ou via formulário de busca
 if (isset($_GET['id']) || isset($_POST['id_busca'])) {
     $id = isset($_GET['id']) ? $_GET['id'] : $_POST['id_busca'];
     $id_busca = $id;
 
-    $stmt = $pdo->prepare("SELECT * FROM remedio WHERE id_remedio = :id");
+    $stmt = $pdo->prepare("SELECT * FROM funcionario WHERE id_funcionario = :id");
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
-    $remedio = $stmt->fetch(PDO::FETCH_ASSOC);
+    $funcionario = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Busca todos os fornecedores para o dropdown
-$stmtFornecedores = $pdo->query("SELECT id_fornecedor, nome_fornecedor FROM fornecedor ORDER BY nome_fornecedor ASC");
-$fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
+// Busca todos os perfis para o dropdown
+$stmtPerfis = $pdo->query("SELECT nome_perfil FROM perfil ORDER BY nome_perfil ASC");
+$perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Alterar Remédio</title>
+    <title>Alterar Funcionário</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
 </head>
@@ -91,7 +91,7 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
     </nav>
 
     <div style="position: relative; text-align: center; margin: 20px 0;">
-        <h2 style="margin: 0;">Alterar Remédio:</h2>
+        <h2 style="margin: 0;">Alterar Funcionário(a):</h2>
         <div class="logout" style="position: absolute; right: 0; top: 10%; transform: translateY(-75%);">
             <form action="logout.php" method="POST">
                 <button type="submit">Logout</button>
@@ -99,50 +99,43 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <form method="POST" action="alterar_remedio.php">
-        <label for="id_busca">Digite o ID do Remédio:</label>
+    <form method="POST" action="alterar_funcionario.php">
+        <label for="id_busca">Digite o ID do Funcionário:</label>
         <input type="number" name="id_busca" id="id_busca" value="<?= htmlspecialchars($id_busca) ?>">
         <button type="submit">Buscar</button>
     </form>
     <br>
 
-    <?php if ($remedio): ?>
-        <form method="POST" action="processa_alteracao_remedio.php">
-            <input type="hidden" name="id_remedio" value="<?= $remedio['id_remedio'] ?>">
+    <?php if ($funcionario): ?>
+        <form method="POST" action="processa_alterar_funcionario.php">
+            <input type="hidden" name="id_funcionario" value="<?= $funcionario['id_funcionario'] ?>">
+
+            <label>Nome do Funcionário(a):</label>
+            <input type="text" name="nome_funcionario" value="<?= htmlspecialchars($funcionario['nome_funcionario']) ?>" required>
+
+            <label>Endereço:</label>
+            <input type="text" name="endereco" value="<?= htmlspecialchars($funcionario['endereco']) ?>">
+
+            <label>Telefone:</label>
+            <input type="text" name="telefone" value="<?= htmlspecialchars($funcionario['telefone']) ?>">
+
+            <label>Email:</label>
+            <input type="email" name="email" value="<?= htmlspecialchars($funcionario['email']) ?>" required>
             
-            <label>Nome do Remédio:</label>
-            <input type="text" name="nome_remedio" value="<?= htmlspecialchars($remedio['nome_remedio']) ?>" required>
-
-            <label>Descrição:</label>
-            <textarea name="descricao"><?= htmlspecialchars($remedio['descricao']) ?></textarea>
-
-            <label>Validade:</label>
-            <input type="date" name="validade" value="<?= htmlspecialchars($remedio['validade']) ?>" required>
-
-            <label>Quantidade:</label>
-            <input type="number" name="qnt_estoque" value="<?= htmlspecialchars($remedio['qnt_estoque']) ?>" required>
-
-            <label>Preço Unitário:</label>
-            <input type="number" step="0.01" name="preco_unit" value="<?= htmlspecialchars($remedio['preco_unit']) ?>" required>
-
-            <label>Tipo:</label>
-            <input type="text" name="tipo" value="<?= htmlspecialchars($remedio['tipo']) ?>" required>
-            
-            <label for="id_fornecedor">Fornecedor:</label>
-            <select id="id_fornecedor" name="id_fornecedor" required>
-                <?php foreach ($fornecedores as $fornecedor): ?>
-                    <option value="<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>" 
-                        <?= ($fornecedor['id_fornecedor'] == $remedio['id_fornecedor']) ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($fornecedor['nome_fornecedor']) ?>
+            <label>Permissão:</label>
+            <select name="permissao" required>
+                <?php foreach ($perfis as $p): ?>
+                    <option value="<?= htmlspecialchars($p['nome_perfil']) ?>" <?= ($p['nome_perfil'] == $funcionario['permissao']) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($p['nome_perfil']) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
             
             <button type="submit">Salvar Alterações</button>
-            <button type="button" onclick="window.location.href='buscar_remedio.php'">Cancelar</button>
+            <button type="button" onclick="window.location.href='buscar_funcionario.php'">Cancelar</button>
         </form>
     <?php elseif ($id_busca !== ""): ?>
-        <p>Nenhum remédio encontrado para o ID informado!</p>
+        <p>Nenhum funcionário encontrado para o ID informado!</p>
     <?php endif; ?>
 
     <a href="principal.php">Voltar Para o Menu</a>

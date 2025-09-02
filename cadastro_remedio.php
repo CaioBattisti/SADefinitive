@@ -18,54 +18,62 @@ $perfil = $stmtPerfil->fetch(PDO::FETCH_ASSOC);
 
 // Definição das Permissões por Perfil
 $permissoes = [
-    1=>["Cadastrar"=>["cadastro_usuario.php","cadastro_fornecedor.php", "cadastro_remedio.php", "cadastro_funcionario.php"],
-        "Buscar"=>["buscar_usuario.php","buscar_fornecedor.php", "buscar_remedio.php", "buscar_funcionario.php"],
-        "Alterar"=>["alterar_usuario.php","alterar_fornecedor.php", "alterar_remedio.php", "alterar_funcionario.php"],
-        "Excluir"=>["excluir_usuario.php","excluir_fornecedor.php", "excluir_remedio.php", "excluir_funcionario.php"]],
-
-    2=>["Cadastrar"=>["cadastro_remedio.php"],
-        "Buscar"=>["buscar_fornecedor.php", "buscar_remedio.php"],
-        "Alterar"=>["alterar_remedio.php"]],
-
-    3=>["Cadastrar"=>["cadastro_remedio.php"],
-        "Buscar"=>["buscar_remedio.php"]],
-
-    4=>["Cadastrar"=>["cadastro_remedio.php"]]
+    1 => [
+        "Cadastrar" => ["cadastro_usuario.php", "cadastro_fornecedor.php", "cadastro_remedio.php", "cadastro_funcionario.php"],
+        "Buscar" => ["buscar_usuario.php", "buscar_fornecedor.php", "buscar_remedio.php", "buscar_funcionario.php"],
+        "Alterar" => ["alterar_usuario.php", "alterar_fornecedor.php", "alterar_remedio.php", "alterar_funcionario.php"],
+        "Excluir" => ["excluir_usuario.php", "excluir_fornecedor.php", "excluir_remedio.php", "excluir_funcionario.php"]
+    ],
+    2 => [
+        "Cadastrar" => ["cadastro_remedio.php"],
+        "Buscar" => ["buscar_fornecedor.php", "buscar_remedio.php"],
+        "Alterar" => ["alterar_remedio.php"]
+    ],
+    3 => [
+        "Cadastrar" => ["cadastro_remedio.php"],
+        "Buscar" => ["buscar_remedio.php"]
+    ],
+    4 => [
+        "Cadastrar" => ["cadastro_remedio.php"]
+    ]
 ];
 
 // Obtendo as Opções Disponiveis para o Perfil Logado
 $opcoes_menu = $permissoes[$id_perfil];
 
+// Verifica se o usuário tem permissão de ADM ou Secretária
+if ($_SESSION['perfil'] != 1 && $_SESSION['perfil'] != 2) {
+    echo "<script>alert('Acesso Negado!');window.location.href='principal.php';</script>";
+    exit();
+}
+
 // Processa o formulário
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $nome_remedio = trim($_POST['nome_remedio']);
     $descricao = trim($_POST['descricao']);
-    $validade = $_POST['validade'];
-    $qnt_estoque = $_POST['qnt_estoque'];
-    $preco_unit = $_POST['preco_unit'];
-    $tipo = $_POST['tipo'];
-    $id_fornecedor = $_POST['id_fornecedor'];
+    $validade = trim($_POST['validade']);
+    $qnt_estoque = trim($_POST['qnt_estoque']);
+    $preco_unit = trim($_POST['preco_unit']);
+    $tipo = trim($_POST['tipo']);
+    $id_fornecedor = trim($_POST['id_fornecedor']);
 
     $errors = [];
 
-    if (empty($nome_remedio)) {
-        $errors[] = "O nome do remédio é obrigatório!";
+    // Validar se o nome do remédio já existe
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM remedio WHERE nome_remedio = :nome_remedio");
+    $stmt->bindParam(':nome_remedio', $nome_remedio);
+    $stmt->execute();
+    if ($stmt->fetchColumn() > 0) {
+        $errors[] = "Este remédio já está cadastrado!";
     }
 
-    if (!is_numeric($qnt_estoque) || $qnt_estoque < 0) {
-        $errors[] = "Quantidade inválida!";
-    }
-
-    if (!is_numeric($preco_unit) || $preco_unit < 0) {
-        $errors[] = "Preço unitário inválido!";
-    }
-
-    if (count($errors) > 0) {
+    if (!empty($errors)) {
         echo "<script>alert('" . implode("\\n", $errors) . "');history.back();</script>";
         exit;
     }
 
-    $sql = "INSERT INTO remedio (nome_remedio, descricao, validade, qnt_estoque, preco_unit, tipo, id_fornecedor) VALUES (:nome_remedio, :descricao, :validade, :qnt_estoque, :preco_unit, :tipo, :id_fornecedor)";
+    $sql = "INSERT INTO remedio (nome_remedio, descricao, validade, qnt_estoque, preco_unit, tipo, id_fornecedor) 
+            VALUES (:nome_remedio, :descricao, :validade, :qnt_estoque, :preco_unit, :tipo, :id_fornecedor)";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':nome_remedio', $nome_remedio);
     $stmt->bindParam(':descricao', $descricao);
@@ -78,22 +86,21 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if ($stmt->execute()) {
         echo "<script>alert('Remédio cadastrado com sucesso!');window.location.href='cadastro_remedio.php';</script>";
     } else {
-        echo "<script>alert('Erro ao cadastrar remédio');history.back();</script>";
+        echo "<script>alert('Erro ao cadastrar remédio!');history.back();</script>";
     }
 }
 
-// Obtém a lista de fornecedores para o dropdown
-$sql_fornecedores = "SELECT id_fornecedor, nome_empresa FROM fornecedor ORDER BY nome_empresa";
-$stmt_fornecedores = $pdo->prepare($sql_fornecedores);
-$stmt_fornecedores->execute();
-$fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
+// Busca todos os fornecedores para o dropdown
+$stmtFornecedores = $pdo->query("SELECT id_fornecedor, nome_fornecedor FROM fornecedor ORDER BY nome_fornecedor ASC");
+$fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de remédio</title>
+    <title>Cadastrar Remédio</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
 </head>
@@ -106,7 +113,7 @@ $fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
                     <ul class="dropdown-menu">
                         <?php foreach ($arquivos as $arquivo): ?>
                             <li>
-                                <a href="<?= $arquivo ?>"><?= ucfirst(str_replace("_"," ",basename($arquivo,".php"))) ?></a>
+                                <a href="<?= $arquivo ?>"><?= ucfirst(str_replace("_", " ", basename($arquivo, ".php"))) ?></a>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -125,7 +132,7 @@ $fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <form action="cadastro_remedio.php" method="POST" id="formCadastro">
-        <label for="nome_remedio">Nome do remédio:</label>
+        <label for="nome_remedio">Nome do Remédio:</label>
         <input type="text" id="nome_remedio" name="nome_remedio" required>
 
         <label for="descricao">Descrição:</label>
@@ -134,26 +141,20 @@ $fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
         <label for="validade">Validade:</label>
         <input type="date" id="validade" name="validade" required>
 
-        <label for="qnt_estoque">Quantidade em Estoque:</label>
+        <label for="qnt_estoque">Quantidade:</label>
         <input type="number" id="qnt_estoque" name="qnt_estoque" min="0" required>
 
         <label for="preco_unit">Preço Unitário:</label>
         <input type="number" step="0.01" id="preco_unit" name="preco_unit" min="0" required>
-        
-        <label for="tipo">Tipo:</label>
-        <select id="tipo" name="tipo" required>
-            <option value="Comprimido">Comprimido</option>
-            <option value="Gota">Gota</option>
-            <option value="Creme">Creme</option>
-            <option value="Injeção">Injeção</option>
-            <option value="Inalação">Inalação</option>
-        </select>
 
-        <label for="id_fornecedor">Empresas:</label>
+        <label for="tipo">Tipo:</label>
+        <input type="text" id="tipo" name="tipo" required>
+        
+        <label for="id_fornecedor">Fornecedor:</label>
         <select id="id_fornecedor" name="id_fornecedor" required>
             <?php foreach ($fornecedores as $fornecedor): ?>
                 <option value="<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>">
-                    <?= htmlspecialchars($fornecedor['nome_empresa']) ?>
+                    <?= htmlspecialchars($fornecedor['nome_fornecedor']) ?>
                 </option>
             <?php endforeach; ?>
         </select>
@@ -161,6 +162,7 @@ $fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
         <button type="submit">Salvar</button>
         <button type="reset">Cancelar</button>
     </form>
-    <a href="principal.php">Voltar Para o Menu</a>
+
+    <a href="principal.php">Voltar para o Menu</a>
 </body>
 </html>
