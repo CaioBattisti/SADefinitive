@@ -38,6 +38,14 @@ $permissoes = [
     ]
 ];
 
+// Mapeamento de ícones para as categorias de menu
+$icones_menu = [
+    "Cadastrar" => "fa-solid fa-plus-circle",
+    "Buscar" => "fa-solid fa-search",
+    "Alterar" => "fa-solid fa-edit",
+    "Excluir" => "fa-solid fa-trash-alt"
+];
+
 $opcoes_menu = $permissoes[$id_perfil];
 
 // Verifica se o usuário tem permissão de ADM
@@ -73,16 +81,28 @@ $perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
     <title>Alterar Funcionário</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <nav>
         <ul class="menu">
             <?php foreach ($opcoes_menu as $categoria => $arquivos): ?>
                 <li class="dropdown">
-                    <a href="#"><?= $categoria ?></a>
+                    <a href="#"><i class="<?= $icones_menu[$categoria] ?? 'fa-solid fa-folder-open' ?>"></i> <?= $categoria ?></a>
                     <ul class="dropdown-menu">
                         <?php foreach ($arquivos as $arquivo): ?>
-                            <li><a href="<?= $arquivo ?>"><?= ucfirst(str_replace("_", " ", basename($arquivo, ".php"))) ?></a></li>
+                            <li>
+                                <a href="<?= $arquivo ?>">
+                                    <?php
+                                        $nome = ucfirst(str_replace("_", " ", basename($arquivo, ".php")));
+                                        if (strpos($nome, "remedio") !== false) echo "<i class='fa-solid fa-capsules'></i> ";
+                                        if (strpos($nome, "usuario") !== false) echo "<i class='fa-solid fa-users'></i> ";
+                                        if (strpos($nome, "fornecedor") !== false) echo "<i class='fa-solid fa-truck'></i> ";
+                                        if (strpos($nome, "funcionario") !== false) echo "<i class='fa-solid fa-user-nurse'></i> ";
+                                        echo $nome;
+                                    ?>
+                                </a>
+                            </li>
                         <?php endforeach; ?>
                     </ul>
                 </li>
@@ -94,7 +114,7 @@ $perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
         <h2 style="margin: 0;">Alterar Funcionário(a):</h2>
         <div class="logout" style="position: absolute; right: 0; top: 10%; transform: translateY(-75%);">
             <form action="logout.php" method="POST">
-                <button type="submit">Logout</button>
+                <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
             </form>
         </div>
     </div>
@@ -121,7 +141,7 @@ $perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
 
             <label>Email:</label>
             <input type="email" name="email" value="<?= htmlspecialchars($funcionario['email']) ?>" required>
-            
+
             <label>Permissão:</label>
             <select name="permissao" required>
                 <?php foreach ($perfis as $p): ?>
@@ -130,7 +150,7 @@ $perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
                     </option>
                 <?php endforeach; ?>
             </select>
-            
+
             <button type="submit">Salvar Alterações</button>
             <button type="button" onclick="window.location.href='buscar_funcionario.php'">Cancelar</button>
         </form>

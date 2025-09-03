@@ -33,6 +33,14 @@ $permissoes = [
     4=>["Cadastrar"=>["cadastro_remedio.php"]]
 ];
 
+// Mapeamento de ícones para as categorias de menu
+$icones_menu = [
+    "Cadastrar" => "fa-solid fa-plus-circle",
+    "Buscar" => "fa-solid fa-search",
+    "Alterar" => "fa-solid fa-edit",
+    "Excluir" => "fa-solid fa-trash-alt"
+];
+
 $opcoes_menu = $permissoes[$id_perfil];
 
 // Inicializa variável
@@ -57,16 +65,28 @@ if (isset($_GET['id']) || isset($_POST['busca_usuario'])) {
     <title>Alterar usuario</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <nav>
     <ul class="menu">
         <?php foreach ($opcoes_menu as $categoria => $arquivos): ?>
             <li class="dropdown">
-                <a href="#"><?= $categoria ?></a>
+                <a href="#"><i class="<?= $icones_menu[$categoria] ?? 'fa-solid fa-folder-open' ?>"></i> <?= $categoria ?></a>
                 <ul class="dropdown-menu">
                     <?php foreach ($arquivos as $arquivo): ?>
-                        <li><a href="<?= $arquivo ?>"><?= ucfirst(str_replace("_"," ",basename($arquivo,".php"))) ?></a></li>
+                        <li>
+                            <a href="<?= $arquivo ?>">
+                                <?php
+                                    $nome = ucfirst(str_replace("_"," ",basename($arquivo,".php")));
+                                    if (strpos($nome, "remedio") !== false) echo "<i class='fa-solid fa-capsules'></i> ";
+                                    if (strpos($nome, "usuario") !== false) echo "<i class='fa-solid fa-users'></i> ";
+                                    if (strpos($nome, "fornecedor") !== false) echo "<i class='fa-solid fa-truck'></i> ";
+                                    if (strpos($nome, "funcionario") !== false) echo "<i class='fa-solid fa-user-nurse'></i> ";
+                                    echo $nome;
+                                ?>
+                            </a>
+                        </li>
                     <?php endforeach; ?>
                 </ul>
             </li>
@@ -78,12 +98,11 @@ if (isset($_GET['id']) || isset($_POST['busca_usuario'])) {
     <h2 style="margin: 0;">Alterar Usuário(a):</h2>
     <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
         <form action="logout.php" method="POST">
-            <button type="submit">Logout</button>
+            <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
         </form>
     </div>
 </div>
 
-<!-- Formulário de busca por ID -->
 <form method="POST" action="alterar_usuario.php">
     <label for="busca_usuario">Digite o ID do Usuário(a):</label>
     <input type="number" name="busca_usuario" id="busca_usuario" value="<?= htmlspecialchars($busca_usuario) ?>">
@@ -113,7 +132,7 @@ if (isset($_GET['id']) || isset($_POST['busca_usuario'])) {
                 <label for="nova_senha">Nova Senha:</label>
                 <input type="password" id="nova_senha" name="nova_senha" placeholder="Digite a nova senha (opcional)">
         <?php endif; ?>
-    
+
     <button type="submit">Salvar Alterações</button>
     <button type="button" onclick="window.location.href='buscar_usuario.php'">Cancelar</button>
 </form>
