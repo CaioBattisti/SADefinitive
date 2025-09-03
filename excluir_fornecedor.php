@@ -34,38 +34,43 @@ $permissoes = [
     4=>["Cadastrar"=>["cadastro_remedio.php"]]
 ];
 
-// Obtendo as opções disponíveis para o perfil logado
+// Mapeamento de ícones para as categorias de menu
+$icones_menu = [
+    "Cadastrar" => "fa-solid fa-plus-circle",
+    "Buscar" => "fa-solid fa-search",
+    "Alterar" => "fa-solid fa-edit",
+    "Excluir" => "fa-solid fa-trash-alt"
+];
+
+// Obtendo as Opções Disponiveis para o Perfil Logado
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Verifica se o usuário tem permissão de ADM ou Secretária
-if ($id_perfil != 1 && $id_perfil != 2) {
-    echo "<script>alert('Acesso Negado!');window.location.href='principal.php';</script>";
+// Apenas administrador pode excluir fornecedor
+if ($_SESSION['perfil'] != 1) {
+    echo "Acesso Negado";
     exit();
 }
 
-// Inicializa a variável de fornecedores
-$fornecedores = [];
+// Exclusão
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $sql = "DELETE FROM fornecedor WHERE id_fornecedor = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    if ($stmt->execute()) {
+        echo "<script>alert('Fornecedor excluído com sucesso!');window.location.href='excluir_fornecedor.php';</script>";
+        exit();
+    } else {
+        echo "Erro ao excluir fornecedor.";
+    }
+}
 
-// Busca todos os fornecedores cadastrados em ordem alfabética
+// Busca todos os fornecedores para exibir na tabela
 $sql = "SELECT * FROM fornecedor ORDER BY nome_fornecedor ASC";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $fornecedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Se um id for passado via GET, exclui o fornecedor
-if(isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $id_fornecedor = $_GET['id'];
-    
-    $sql = "DELETE FROM fornecedor WHERE id_fornecedor = :id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':id', $id_fornecedor, PDO::PARAM_INT);
-
-    if($stmt->execute()) {
-        echo "<script>alert('Fornecedor excluído com sucesso!');window.location.href='excluir_fornecedor.php';</script>";
-    } else {
-        echo "<script>alert('Erro ao excluir o fornecedor.');window.location.href='excluir_fornecedor.php';</script>";
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -75,17 +80,27 @@ if(isset($_GET['id']) && is_numeric($_GET['id'])) {
     <title>Excluir Fornecedor</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <nav>
         <ul class="menu">
             <?php foreach ($opcoes_menu as $categoria => $arquivos): ?>
                 <li class="dropdown">
-                    <a href="#"><?= $categoria ?></a>
+                    <a href="#"><i class="<?= $icones_menu[$categoria] ?? '' ?>"></i> <?= $categoria ?></a>
                     <ul class="dropdown-menu">
                         <?php foreach ($arquivos as $arquivo): ?>
                             <li>
-                                <a href="<?= $arquivo ?>"><?= ucfirst(str_replace("_"," ",basename($arquivo,".php"))) ?></a>
+                                <a href="<?= $arquivo ?>">
+                                    <?php
+                                        $nome = ucfirst(str_replace("_"," ",basename($arquivo,".php")));
+                                        if (strpos($nome, "remedio") !== false) echo "<i class='fa-solid fa-capsules'></i> ";
+                                        if (strpos($nome, "usuario") !== false) echo "<i class='fa-solid fa-users'></i> ";
+                                        if (strpos($nome, "fornecedor") !== false) echo "<i class='fa-solid fa-truck'></i> ";
+                                        if (strpos($nome, "funcionario") !== false) echo "<i class='fa-solid fa-user-nurse'></i> ";
+                                        echo $nome;
+                                    ?>
+                                </a>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -96,9 +111,9 @@ if(isset($_GET['id']) && is_numeric($_GET['id'])) {
 
     <div style="position: relative; text-align: center; margin: 20px 0;">
         <h2 style="margin: 0;">Excluir Fornecedores(a):</h2>
-        <div class="logout" style="position: absolute; right: 0; top: 10%; transform: translateY(-75%);">
+        <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-90%);">
             <form action="logout.php" method="POST">
-                <button type="submit">Logout</button>
+                <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
             </form>
         </div>
     </div>
