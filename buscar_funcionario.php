@@ -38,6 +38,14 @@ $permissoes = [
     ]
 ];
 
+// Mapeamento de ícones para as categorias de menu
+$icones_menu = [
+    "Cadastrar" => "fa-solid fa-plus-circle",
+    "Buscar" => "fa-solid fa-search",
+    "Alterar" => "fa-solid fa-edit",
+    "Excluir" => "fa-solid fa-trash-alt"
+];
+
 // Obtendo as opções disponíveis para o perfil logado
 $opcoes_menu = $permissoes[$id_perfil];
 
@@ -81,17 +89,27 @@ $funcionarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Buscar Funcionários</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <nav>
         <ul class="menu">
             <?php foreach ($opcoes_menu as $categoria => $arquivos): ?>
                 <li class="dropdown">
-                    <a href="#"><?= $categoria ?></a>
+                    <a href="#"><i class="<?= $icones_menu[$categoria] ?? '' ?>"></i> <?= $categoria ?></a>
                     <ul class="dropdown-menu">
                         <?php foreach ($arquivos as $arquivo): ?>
                             <li>
-                                <a href="<?= $arquivo ?>"><?= ucfirst(str_replace("_", " ", basename($arquivo, ".php"))) ?></a>
+                                <a href="<?= $arquivo ?>">
+                                    <?php
+                                        $nome = ucfirst(str_replace("_"," ",basename($arquivo,".php")));
+                                        if (strpos($nome, "remedio") !== false) echo "<i class='fa-solid fa-capsules'></i> ";
+                                        if (strpos($nome, "usuario") !== false) echo "<i class='fa-solid fa-users'></i> ";
+                                        if (strpos($nome, "fornecedor") !== false) echo "<i class='fa-solid fa-truck'></i> ";
+                                        if (strpos($nome, "funcionario") !== false) echo "<i class='fa-solid fa-user-nurse'></i> ";
+                                        echo $nome;
+                                    ?>
+                                </a>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -104,7 +122,7 @@ $funcionarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h2 style="margin: 0;">Buscar Funcionário(a):</h2>
         <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
             <form action="logout.php" method="POST">
-                <button type="submit">Logout</button>
+                <button type="submit"><i class="fa-solid fa-right-from-bracket"></i>  Logout</button>
             </form>
         </div>
     </div>
@@ -113,7 +131,7 @@ $funcionarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <label for="busca">Digite o ID ou o Primeiro Nome:</label>
         <input type="text" id="busca" name="busca">
         <button type="submit">Pesquisar</button>
-    </form>   
+    </form>
 
     <?php if (!empty($funcionarios)): ?>
         <table>
