@@ -2,40 +2,36 @@
 session_start();
 require_once 'conexao.php';
 
-// Verifica se o usuário está logado
+// Verifica se usuário está logado
 if (!isset($_SESSION['usuario'])) {
     header("Location: index.php");
     exit();
 }
 
-// Obtendo o Nome do Perfil do Usuário Logado
+// Obtendo o Nome do Perfil do Usuario Logado
 $id_perfil = $_SESSION['perfil'];
 $sqlPerfil = "SELECT nome_perfil FROM perfil WHERE id_perfil = :id_perfil";
 $stmtPerfil = $pdo->prepare($sqlPerfil);
 $stmtPerfil->bindParam(':id_perfil', $id_perfil);
 $stmtPerfil->execute();
 $perfil = $stmtPerfil->fetch(PDO::FETCH_ASSOC);
+$nome_perfil = $perfil['nome_perfil'];
 
 // Definição das Permissões por Perfil
 $permissoes = [
-    1 => [
-        "Cadastrar" => ["cadastro_usuario.php", "cadastro_fornecedor.php", "cadastro_remedio.php", "cadastro_funcionario.php"],
-        "Buscar" => ["buscar_usuario.php", "buscar_fornecedor.php", "buscar_remedio.php", "buscar_funcionario.php"],
-        "Alterar" => ["alterar_usuario.php", "alterar_fornecedor.php", "alterar_remedio.php", "alterar_funcionario.php"],
-        "Excluir" => ["excluir_usuario.php", "excluir_fornecedor.php", "excluir_remedio.php", "excluir_funcionario.php"]
-    ],
-    2 => [
-        "Cadastrar" => ["cadastro_remedio.php"],
-        "Buscar" => ["buscar_fornecedor.php", "buscar_remedio.php"],
-        "Alterar" => ["alterar_remedio.php"]
-    ],
-    3 => [
-        "Cadastrar" => ["cadastro_remedio.php"],
-        "Buscar" => ["buscar_remedio.php"]
-    ],
-    4 => [
-        "Cadastrar" => ["cadastro_remedio.php"]
-    ]
+    1=>["Cadastrar"=>["cadastro_usuario.php","cadastro_fornecedor.php", "cadastro_remedio.php", "cadastro_funcionario.php"],
+        "Buscar"=>["buscar_usuario.php","buscar_fornecedor.php", "buscar_remedio.php", "buscar_funcionario.php"],
+        "Alterar"=>["alterar_usuario.php","alterar_fornecedor.php", "alterar_remedio.php", "alterar_funcionario.php"],
+        "Excluir"=>["excluir_usuario.php","excluir_fornecedor.php", "excluir_remedio.php", "excluir_funcionario.php"]],
+
+    2=>["Cadastrar"=>["cadastro_remedio.php"],
+        "Buscar"=>["buscar_fornecedor.php", "buscar_remedio.php"],
+        "Alterar"=>["alterar_remedio.php"]],
+
+    3=>["Cadastrar"=>["cadastro_remedio.php"],
+        "Buscar"=>["buscar_remedio.php"]],
+
+    4=>["Cadastrar"=>["cadastro_remedio.php"]]
 ];
 
 // Mapeamento de ícones para as categorias de menu
@@ -46,10 +42,10 @@ $icones_menu = [
     "Excluir" => "fa-solid fa-trash-alt"
 ];
 
-// Obtendo as opções disponíveis para o perfil logado
+// Obtendo as Opções Disponiveis para o Perfil Logado
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Apenas administrador pode excluir remédio
+// Apenas administrador pode excluir
 if ($_SESSION['perfil'] != 1) {
     echo "Acesso Negado";
     exit();
@@ -58,24 +54,22 @@ if ($_SESSION['perfil'] != 1) {
 // Exclusão
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $sql = "DELETE FROM remedio WHERE id_remedio = :id";
+    $sql = "DELETE FROM usuario WHERE id_usuario = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     if ($stmt->execute()) {
-        echo "<script>alert('Remédio excluído com sucesso!');window.location.href='excluir_remedio.php';</script>";
+        echo "<script>alert('Usuário excluído com sucesso!');window.location.href='excluir_usuario.php';</script>";
         exit();
     } else {
-        echo "Erro ao excluir remédio.";
+        echo "Erro ao excluir usuário.";
     }
 }
 
-// Busca todos os remédios para exibir na tabela
-$sql = "SELECT r.*, f.nome_fornecedor FROM remedio r 
-        LEFT JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor
-        ORDER BY r.nome_remedio ASC";
+// Busca todos os usuarios para exibir na tabela
+$sql = "SELECT * FROM usuario ORDER BY nome ASC";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
-$remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -83,7 +77,7 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excluir Remédio</title>
+    <title>Excluir Usuários</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -99,7 +93,7 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <li>
                                 <a href="<?= $arquivo ?>">
                                     <?php
-                                        $nome = ucfirst(str_replace("_", " ", basename($arquivo, ".php")));
+                                        $nome = ucfirst(str_replace("_"," ",basename($arquivo,".php")));
                                         if (strpos($nome, "remedio") !== false) echo "<i class='fa-solid fa-capsules'></i> ";
                                         if (strpos($nome, "usuario") !== false) echo "<i class='fa-solid fa-users'></i> ";
                                         if (strpos($nome, "fornecedor") !== false) echo "<i class='fa-solid fa-truck'></i> ";
@@ -116,45 +110,38 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </nav>
 
     <div style="position: relative; text-align: center; margin: 20px 0;">
-        <h2 style="margin: 0;">Excluir Remédio(a):</h2>
+        <h2 style="margin: 0;">Excluir Usuários(a):</h2>
         <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-90%);">
             <form action="logout.php" method="POST">
                 <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
             </form>
         </div>
     </div>
-    
-    <?php if(!empty($remedios)): ?>
+
+    <?php if(!empty($usuarios)): ?>
         <table border="1">
             <tr>
                 <th>ID</th>
                 <th>Nome</th>
-                <th>Descrição</th>
-                <th>Validade</th>
-                <th>Quantidade</th>
-                <th>Preço Unitário</th>
-                <th>Tipo</th>
-                <th>Fornecedor</th>
+                <th>Email</th>
+                <th>Perfil</th>
                 <th>Ações</th>
             </tr>
-            <?php foreach ($remedios as $remedio): ?>
+
+            <?php foreach($usuarios as $usuario): ?>
                 <tr>
-                    <td><?= htmlspecialchars($remedio['id_remedio']) ?></td>
-                    <td><?= htmlspecialchars($remedio['nome_remedio']) ?></td>
-                    <td><?= htmlspecialchars($remedio['descricao']) ?></td>
-                    <td><?= htmlspecialchars($remedio['validade']) ?></td>
-                    <td><?= htmlspecialchars($remedio['qnt_estoque']) ?></td>
-                    <td><?= htmlspecialchars($remedio['preco_unit']) ?></td>
-                    <td><?= htmlspecialchars($remedio['tipo']) ?></td>
-                    <td><?= htmlspecialchars($remedio['nome_fornecedor']) ?></td>
+                    <td><?= htmlspecialchars($usuario['id_usuario']); ?></td>
+                    <td><?= htmlspecialchars($usuario['nome']); ?></td>
+                    <td><?= htmlspecialchars($usuario['email']); ?></td>
+                    <td><?= htmlspecialchars($usuario['id_perfil']); ?></td>
                     <td>
-                        <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem certeza que deseja excluir este remédio?')">Excluir</a>
+                        <a href="excluir_usuario.php?id=<?= htmlspecialchars($usuario['id_usuario']); ?>" onclick="return confirm('Tem Certeza que você que deseja excluir esse usuario?')">Excluir</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </table>
     <?php else: ?>
-        <p>Nenhum remédio encontrado.</p>
+        <p>Nenhum usuário encontrado.</p>
     <?php endif; ?>
     <a href="principal.php">Voltar para o Menu</a>
 </body>
