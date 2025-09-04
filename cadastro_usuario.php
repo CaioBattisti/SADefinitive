@@ -164,8 +164,8 @@ if($_SERVER['REQUEST_METHOD'] =="POST"){
             <option value="4">Fornecedor</option>
         </select>
 
-        <button type="submit">Salvar</button>
-        <button type="reset">Cancelar</button>
+        <button type="submit"><i class="fa-solid fa-check"></i> Salvar</button>
+        <button type="reset"><i class="fa-solid fa-ban"></i> Cancelar</button>
     </form>
 
     <a href="principal.php">Voltar Para o Menu</a>

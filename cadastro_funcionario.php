@@ -168,8 +168,8 @@ $perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
             <?php endforeach; ?>
         </select>
 
-        <button type="submit">Salvar</button>
-        <button type="reset">Cancelar</button>
+        <button type="submit"><i class="fa-solid fa-check"></i> Salvar</button>
+        <button type="reset"><i class="fa-solid fa-ban"></i> Cancelar</button>
     </form>
 
     <a href="principal.php">Voltar para o Menu</a>

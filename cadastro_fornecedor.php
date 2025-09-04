@@ -100,7 +100,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     }
 }
 ?>
-<!DOCTYPE html>
+<!DOCTYPE ahtml>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -158,8 +158,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <label>Email:</label>
         <input type="email" name="email" required>
 
-        <button type="submit">Salvar</button>
-        <button type="reset">Cancelar</button>
+        <button type="submit"><i class="fa-solid fa-check"></i> Salvar</button>
+        <button type="reset"><i class="fa-solid fa-ban"></i> Cancelar</button>
     </form>
 
     <a href="principal.php">Voltar para o Menu</a>

@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f5f9f6; /* branco esverdeado */
     text-align: center;
 }
 
@@ -9,7 +9,8 @@ body {
     margin: auto;
     padding: 20px;
     background: white;
-    border-radius: 5px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
 }
 
 input, button {
@@ -23,8 +24,9 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 15px;
-    background-color: #f4f4f4;
+    background-color: #2e8b57; /* verde farmácia */
     border-bottom: 2px solid #ccc;
+    color: white;
 }
 
 .saudacao {
@@ -55,7 +57,7 @@ header {
     padding: 0;
     margin: 0;
     display: flex;
-    background-color: #007bff; /* azul principal */
+    background-color: #2e8b57; /* azul principal */
 }
 
 .menu li {
@@ -67,12 +69,12 @@ header {
     padding: 15px;
     color: white;
     text-decoration: none;
-    background-color: #007bff; /* azul principal */
+    background-color: #2e8b57; /* azul principal */
     white-space: nowrap; /* não deixa quebrar linha */
 }
 
 .menu li:hover > a {
-    background-color: #0056b3; /* azul mais escuro ao passar o mouse */
+    background-color: #115808; /* azul mais escuro ao passar o mouse */
 }
 
 /* Submenu */
@@ -81,7 +83,7 @@ header {
     position: absolute;
     top: 100%;   /* logo abaixo do item pai */
     left: 0;
-    background-color: #3399ff; /* azul intermediário */
+    background-color: #3fdf61; /* azul intermediário */
     list-style: none;
     padding: 0;
     margin: 0;
@@ -94,11 +96,11 @@ header {
     display: block;
     color: white;
     text-decoration: none;
-    background-color: #3399ff;
+    background-color: #3fdf61;
 }
 
 .dropdown-menu li a:hover {
-    background-color: #0056b3; /* azul escuro no hover */
+    background-color: #115808; /* azul escuro no hover */
 }
 
 /* Faz abrir o submenu */
@@ -113,7 +115,7 @@ form {
     width: 500px;
     margin: 50px auto;
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -134,7 +136,7 @@ select {
     width: 80%;
     padding: 8px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #b5d0be;
     border-radius: 5px;
     font-size: 16px;
 }
@@ -142,7 +144,7 @@ select {
 button {
     width: 80%;
     padding: 10px;
-    background-color: #007bff;
+    background-color: #2e8b57; /* verde farmácia */
     color: white;
     border: none;
     border-radius: 5px;
@@ -152,5 +154,5 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #246b43; /* verde mais escuro */
 }
