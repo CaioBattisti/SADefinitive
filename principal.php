@@ -70,7 +70,11 @@ $opcoes_menu = $permissoes[$id_perfil];
             <h2><i class="fa-solid fa-user"></i> Bem-vindo, <?php echo $_SESSION["usuario"]; ?></h2>
             <h3><i class="fa-solid fa-id-badge"></i> <?php echo $nome_perfil; ?></h3>
         </div>
-            <p>Gerenciamento de <b>remédios</b>, <b>fornecedores</b>, <b>funcionários</b> e <b>usuários</b> de forma eficiente e organizada.</p>
+        <div style="display: flex; justify-content: center; align-items: center; text-align: center;">
+            <p style="font-size: 18px;">
+                Gerenciamento de <b>remédios</b>, <b>fornecedores</b>, <b>funcionários</b> e <b>usuários</b> de forma eficiente e organizada.
+            </p>
+        </div>
         <div class="logout" style="right: 0; top: 100%; translate: 3% -200%;">
             <a href="logout.php">
                 <button type="button"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>

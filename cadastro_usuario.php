@@ -139,7 +139,7 @@ if($_SERVER['REQUEST_METHOD'] =="POST"){
 
     <div style="position: relative; text-align: center; margin: 20px 0;">
         <h2 style="margin: 0;">Cadastro de Usuários(a):</h2>
-        <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
+        <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-70%);">
             <a href="logout.php">
                 <button type="button"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
             </a>
