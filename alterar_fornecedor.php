@@ -95,11 +95,11 @@ if (isset($_GET['id']) || isset($_POST['id_busca'])) {
 </nav>
 
 <div style="position: relative; text-align: center; margin: 20px 0;">
-    <h2 style="margin: 0;">Alterar Fornecedores(a):</h2>
-    <div class="logout" style="position: absolute; right: 0; top: 10%; transform: translateY(-75%);">
-        <form action="logout.php" method="POST">
-            <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
-        </form>
+    <h2 style="margin: 0;">Alterar Fornecedor(a):</h2>
+    <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
+        <a href="logout.php">
+            <button type="button"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </a>
     </div>
 </div>
 

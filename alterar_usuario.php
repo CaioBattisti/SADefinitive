@@ -95,11 +95,11 @@ if (isset($_GET['id']) || isset($_POST['busca_usuario'])) {
 </nav>
 
 <div style="position: relative; text-align: center; margin: 20px 0;">
-    <h2 style="margin: 0;">Alterar Usuário(a):</h2>
+    <h2 style="margin: 0;">Alterar Usuários(a):</h2>
     <div class="logout" style="position: absolute; right: 0; top: 100%; transform: translateY(-50%);">
-        <form action="logout.php" method="POST">
-            <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
-        </form>
+        <a href="logout.php">
+            <button type="button"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </a>
     </div>
 </div>
 
