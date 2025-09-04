@@ -18,19 +18,24 @@ $perfil = $stmtPerfil->fetch(PDO::FETCH_ASSOC);
 
 // Definição das Permissões
 $permissoes = [
-    1=>["Cadastrar"=>["cadastro_usuario.php","cadastro_fornecedor.php", "cadastro_remedio.php", "cadastro_funcionario.php"],
-        "Buscar"=>["buscar_usuario.php","buscar_fornecedor.php", "buscar_remedio.php", "buscar_funcionario.php"],
-        "Alterar"=>["alterar_usuario.php","alterar_fornecedor.php", "alterar_remedio.php", "alterar_funcionario.php"],
-        "Excluir"=>["excluir_usuario.php","excluir_fornecedor.php", "excluir_remedio.php", "excluir_funcionario.php"]],
-
-    2=>["Cadastrar"=>["cadastro_remedio.php"],
-        "Buscar"=>["buscar_fornecedor.php", "buscar_remedio.php"],
-        "Alterar"=>["alterar_remedio.php"]],
-
-    3=>["Cadastrar"=>["cadastro_remedio.php"],
-        "Buscar"=>["buscar_remedio.php"]],
-
-    4=>["Cadastrar"=>["cadastro_remedio.php"]]
+    1 => [
+        "Cadastrar" => ["cadastro_usuario.php", "cadastro_fornecedor.php", "cadastro_remedio.php", "cadastro_funcionario.php"],
+        "Buscar" => ["buscar_usuario.php", "buscar_fornecedor.php", "buscar_remedio.php", "buscar_funcionario.php"],
+        "Alterar" => ["alterar_usuario.php", "alterar_fornecedor.php", "alterar_remedio.php", "alterar_funcionario.php"],
+        "Excluir" => ["excluir_usuario.php", "excluir_fornecedor.php", "excluir_remedio.php", "excluir_funcionario.php"]
+    ],
+    2 => [
+        "Cadastrar" => ["cadastro_remedio.php"],
+        "Buscar" => ["buscar_fornecedor.php","buscar_funcionario.php","buscar_remedio.php"],
+        "Alterar" => ["alterar_remedio.php"]
+    ],
+    3 => [
+        "Cadastrar" => ["cadastro_remedio.php"],
+        "Buscar" => ["buscar_remedio.php"]
+    ],
+    4 => [
+        "Cadastrar" => ["cadastro_remedio.php"]
+    ]
 ];
 
 // Mapeamento de ícones para as categorias de menu

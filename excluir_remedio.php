@@ -26,7 +26,7 @@ $permissoes = [
     ],
     2 => [
         "Cadastrar" => ["cadastro_remedio.php"],
-        "Buscar" => ["buscar_fornecedor.php", "buscar_remedio.php"],
+        "Buscar" => ["buscar_fornecedor.php","buscar_funcionario.php","buscar_remedio.php"],
         "Alterar" => ["alterar_remedio.php"]
     ],
     3 => [
