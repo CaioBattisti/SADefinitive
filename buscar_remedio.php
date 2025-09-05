@@ -121,7 +121,7 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <form action="buscar_remedio.php" method="POST">
         <label for="busca">Digite o ID ou o Nome do Remédio:</label>
         <input type="text" id="busca" name="busca">
-        <button type="submit">Pesquisar</button>
+        <button type="submit"><i class="fa-solid fa-search"></i>Pesquisar</button>
     </form>
 
     <?php if (!empty($remedios)): ?>
