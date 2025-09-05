@@ -51,8 +51,8 @@ $icones_menu = [
 $opcoes_menu = $permissoes[$id_perfil];
 
 // Apenas administrador pode excluir fornecedor
-if ($_SESSION['perfil'] != 1) {
-    echo "Acesso Negado";
+if ($_SESSION['perfil'] == 2) {
+    echo "<script>alert('Você não tem Permissão pra excluir esse Fornecedor!');window.location.href='buscar_fornecedor.php';</script>";
     exit();
 }
 

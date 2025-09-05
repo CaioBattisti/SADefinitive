@@ -49,9 +49,8 @@ $icones_menu = [
 // Obtendo as opções disponíveis para o perfil logado
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Apenas administrador pode excluir funcionário
-if ($_SESSION['perfil'] != 1) {
-    echo "Acesso Negado";
+if ($_SESSION['perfil'] == 2) {
+    echo "<script>alert('Você não tem Permissão pra excluir esse Funcionario!');window.location.href='buscar_funcionario.php';</script>";
     exit();
 }
 

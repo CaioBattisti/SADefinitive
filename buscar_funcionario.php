@@ -49,12 +49,6 @@ $icones_menu = [
 // Obtendo as opções disponíveis para o perfil logado
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Verifica se o usuário tem permissão de ADM
-if ($_SESSION['perfil'] != 1) {
-    echo "<script>alert('Acesso Negado!');window.location.href='principal.php';</script>";
-    exit();
-}
-
 // Inicializa a variável para evitar erros
 $funcionarios = [];
 
