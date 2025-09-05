@@ -166,7 +166,13 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
         <input type="number" step="0.01" id="preco_unit" name="preco_unit" min="0" required>
 
         <label for="tipo">Tipo:</label>
-        <input type="text" id="tipo" name="tipo" required>
+        <select id="tipo" name="tipo" required>
+            <option value="Comprimido">Comprimido</option>
+            <option value="Gota">Gota</option>
+            <option value="Creme">Creme</option>
+            <option value="Injeção">Injeção</option>
+            <option value="Inalação">Inalação</option>
+        </select>
         
         <label for="id_fornecedor">Fornecedor:</label>
         <select id="id_fornecedor" name="id_fornecedor" required>
