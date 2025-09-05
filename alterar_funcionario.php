@@ -147,7 +147,7 @@ $perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </select>
 
-            <button type="submit">Salvar Alterações</button>
+            <button type="submit"><i class="fa-solid fa-check"></i>Salvar Alterações</button>
             <button type="button" onclick="window.location.href='buscar_funcionario.php'">Cancelar</button>
         </form>
     <?php elseif ($id_busca !== ""): ?>

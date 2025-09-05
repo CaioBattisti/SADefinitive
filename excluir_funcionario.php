@@ -139,7 +139,7 @@ $funcionarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <td><?= htmlspecialchars($funcionario['telefone']); ?></td>
                     <td><?= htmlspecialchars($funcionario['permissao']); ?></td>
                     <td>
-                        <a href="excluir_funcionario.php?id=<?= htmlspecialchars($funcionario['id_funcionario']); ?>" onclick="return confirm('Tem certeza que deseja excluir este funcionário?')">Excluir</a>
+                        <a href="excluir_funcionario.php?id=<?= htmlspecialchars($funcionario['id_funcionario']); ?>" onclick="return confirm('Tem certeza que deseja excluir este funcionário?')"><i class="fa-solid fa-trash-alt"></i>Excluir</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

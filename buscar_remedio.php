@@ -148,8 +148,8 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($remedio['tipo']) ?></td>
                 <td><?= htmlspecialchars($remedio['nome_fornecedor']) ?></td>
                 <td>
-                    <a href="alterar_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>">Alterar</a>
-                    <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem certeza que deseja excluir este remédio?')">Excluir</a>
+                    <a href="alterar_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>"><i class="fa-solid fa-edit"></i>Alterar</a>
+                    <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem certeza que deseja excluir este remédio?')"><i class="fa-solid fa-trash-alt"></i>Excluir</a>
                 </td>
             </tr>
         <?php endforeach; ?>

@@ -140,7 +140,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <td><?= htmlspecialchars($usuario['email']); ?></td>
                     <td><?= htmlspecialchars($usuario['id_perfil']); ?></td>
                     <td>
-                        <a href="excluir_usuario.php?id=<?= htmlspecialchars($usuario['id_usuario']); ?>" onclick="return confirm('Tem Certeza que você que deseja excluir esse usuario?')">Excluir</a>
+                        <a href="excluir_usuario.php?id=<?= htmlspecialchars($usuario['id_usuario']); ?>" onclick="return confirm('Tem Certeza que você que deseja excluir esse usuario?')"><i class="fa-solid fa-trash-alt"></i>Excluir</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
