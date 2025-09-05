@@ -121,7 +121,7 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <form action="buscar_remedio.php" method="POST">
         <label for="busca">Digite o ID ou o Nome do Remédio:</label>
         <input type="text" id="busca" name="busca">
-        <button type="submit"><i class="fa-solid fa-search"></i>Pesquisar<i class="fa-solid fa-search"></i></button>
+        <button type="submit"><i class="fa-solid fa-search"></i> Pesquisar <i class="fa-solid fa-search"></i></button>
     </form>
 
     <?php if (!empty($remedios)): ?>
@@ -148,8 +148,8 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($remedio['tipo']) ?></td>
                 <td><?= htmlspecialchars($remedio['nome_fornecedor']) ?></td>
                 <td>
-                    <a href="alterar_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>"><i class="fa-solid fa-edit"></i>Alterar</a>
-                    <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem certeza que deseja excluir este remédio?')"><i class="fa-solid fa-trash-alt"></i>Excluir</a>
+                    <a href="alterar_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>"><i class="fa-solid fa-edit"></i> Alterar</a>
+                    <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem certeza que deseja excluir este remédio?')"><i class="fa-solid fa-trash-alt"></i> Excluir</a>
                 </td>
             </tr>
         <?php endforeach; ?>

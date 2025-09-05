@@ -127,7 +127,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <form action="buscar_usuario.php" method="POST">
         <label for="busca">Digite o ID ou o Primeiro Nome:</label>
         <input type="text" id="busca" name="busca">
-        <button type="submit"><i class="fa-solid fa-search"></i>Pesquisar<i class="fa-solid fa-search"></i></button>
+        <button type="submit"><i class="fa-solid fa-search"></i> Pesquisar <i class="fa-solid fa-search"></i></button>
     </form>   
 
     <?php if (!empty($usuarios)): ?>
@@ -146,8 +146,8 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($usuario['email']) ?></td>
                 <td><?= htmlspecialchars($usuario['id_perfil']) ?></td>
                 <td>
-                    <a href="alterar_usuario.php?id=<?= htmlspecialchars($usuario['id_usuario']) ?>"><i class="fa-solid fa-edit"></i>Alterar Usuário</a>
-                    <a href="excluir_usuario.php?id=<?= htmlspecialchars($usuario['id_usuario']) ?>" onclick="return confirm('Tem Certeza que deseja Excluir esse Usuario?')"><i class="fa-solid fa-trash-alt"></i>Excluir Usuário</a>
+                    <a href="alterar_usuario.php?id=<?= htmlspecialchars($usuario['id_usuario']) ?>"><i class="fa-solid fa-edit"></i> Alterar Usuário </a>
+                    <a href="excluir_usuario.php?id=<?= htmlspecialchars($usuario['id_usuario']) ?>" onclick="return confirm('Tem Certeza que deseja Excluir esse Usuario?')"><i class="fa-solid fa-trash-alt"></i> Excluir Usuário </a>
                 </td>
             </tr>
         <?php endforeach; ?>

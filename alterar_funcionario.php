@@ -118,7 +118,7 @@ $perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
     <form method="POST" action="alterar_funcionario.php">
         <label for="id_busca">Digite o ID do Funcionário:</label>
         <input type="number" name="id_busca" id="id_busca" value="<?= htmlspecialchars($id_busca) ?>">
-        <button type="submit"><i class="fa-solid fa-search"></i>Buscar<i class="fa-solid fa-search"></i></button>
+        <button type="submit"><i class="fa-solid fa-search"></i> Buscar <i class="fa-solid fa-search"></i></button>
     </form>
     <br>
 
