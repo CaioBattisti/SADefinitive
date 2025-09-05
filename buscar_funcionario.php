@@ -124,7 +124,7 @@ $funcionarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <form action="buscar_funcionario.php" method="POST">
         <label for="busca">Digite o ID ou o Primeiro Nome:</label>
         <input type="text" id="busca" name="busca">
-        <button type="submit"><i class="fa-solid fa-search"></i>Pesquisar<i class="fa-solid fa-search"></i></button>
+        <button type="submit"><i class="fa-solid fa-search"></i> Pesquisar <i class="fa-solid fa-search"></i></button>
     </form>
 
     <?php if (!empty($funcionarios)): ?>
@@ -147,8 +147,8 @@ $funcionarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($funcionario['email']) ?></td>
                 <td><?= htmlspecialchars($funcionario['permissao']) ?></td>
                 <td>
-                    <a href="alterar_funcionario.php?id=<?= htmlspecialchars($funcionario['id_funcionario']) ?>"><i class="fa-solid fa-edit"></i>Alterar</a>
-                    <a href="excluir_funcionario.php?id=<?= htmlspecialchars($funcionario['id_funcionario']) ?>" onclick="return confirm('Tem certeza que deseja excluir esse Funcionário?')"><i class="fa-solid fa-trash-alt"></i>Excluir</a>
+                    <a href="alterar_funcionario.php?id=<?= htmlspecialchars($funcionario['id_funcionario']) ?>"><i class="fa-solid fa-edit"></i> Alterar</a>
+                    <a href="excluir_funcionario.php?id=<?= htmlspecialchars($funcionario['id_funcionario']) ?>" onclick="return confirm('Tem certeza que deseja excluir esse Funcionário?')"><i class="fa-solid fa-trash-alt"></i> Excluir</a>
                 </td>
             </tr>
         <?php endforeach; ?>
