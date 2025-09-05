@@ -63,7 +63,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     $telefone = trim($_POST['telefone']);
     $email = trim($_POST['email']);
     $nome_empresa = trim($_POST['nome_empresa']);
-    $permissao = "fornecedor(a)";
+
+    // Aqui estava: $permissao = "fornecedor";
+    // Corrigido para valor válido da FK na tabela perfil:
+    $permissao = "Fornecedor: Nível de Muito Baixo Acesso";
 
     $errors = [];
 
@@ -83,8 +86,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     }
 
     if (!empty($errors)) {
-        // Usa json_encode para evitar problemas de aspas e quebras de linha no JS
-        echo "<script>alert(' . json_encode(implode(\"\\n\", $errors)) . ');history.back();</script>";
+        // Corrigido para imprimir o alert corretamente em JavaScript
+        echo "<script>alert('". implode("\\n", $errors) ."');history.back();</script>";
         exit;
     }
 
