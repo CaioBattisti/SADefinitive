@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 }
 
 // Busca todos os fornecedores para o dropdown
-$stmtFornecedores = $pdo->query("SELECT id_fornecedor, nome_fornecedor FROM fornecedor ORDER BY nome_fornecedor ASC");
+$stmtFornecedores = $pdo->query("SELECT id_fornecedor, nome_empresa FROM fornecedor ORDER BY nome_empresa ASC");
 $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
@@ -174,11 +174,11 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
             <option value="Inalação">Inalação</option>
         </select>
         
-        <label for="id_fornecedor">Fornecedor:</label>
+        <label for="id_fornecedor">Nome da Empresa:</label>
         <select id="id_fornecedor" name="id_fornecedor" required>
             <?php foreach ($fornecedores as $fornecedor): ?>
                 <option value="<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>">
-                    <?= htmlspecialchars($fornecedor['nome_fornecedor']) ?>
+                    <?= htmlspecialchars($fornecedor['nome_empresa']) ?>
                 </option>
             <?php endforeach; ?>
         </select>

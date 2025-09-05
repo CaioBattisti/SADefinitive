@@ -49,21 +49,29 @@ $icones_menu = [
 // Obtendo as Opções Disponiveis para o Perfil Logado
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Inicializa a variavel para evitar Erros
+// Inicializa a variável para evitar erros
 $remedios = [];
 
-// Se o Formulário for Enviado, Busca pelo id ou nome do remedio
+// Se o Formulário for Enviado, Busca pelo id, nome, tipo ou nome da empresa
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['busca'])) {
     $busca = trim($_POST['busca']);
-    $sql = "SELECT r.*, f.nome_fornecedor FROM remedio r 
+    $sql = "SELECT r.*, f.nome_empresa 
+            FROM remedio r 
             LEFT JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor 
-            WHERE r.id_remedio = :busca OR r.nome_remedio LIKE :busca_nome 
+            WHERE 
+                r.id_remedio = :busca_id OR
+                LOWER(r.nome_remedio) LIKE LOWER(:busca_nome) OR
+                LOWER(r.tipo) LIKE LOWER(:busca_tipo) OR
+                LOWER(f.nome_empresa) LIKE LOWER(:busca_empresa)
             ORDER BY r.nome_remedio ASC";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':busca', $busca, PDO::PARAM_INT);
+    $stmt->bindValue(':busca_id', $busca, PDO::PARAM_INT);
     $stmt->bindValue(':busca_nome', "%$busca%", PDO::PARAM_STR);
+    $stmt->bindValue(':busca_tipo', "%$busca%", PDO::PARAM_STR);
+    $stmt->bindValue(':busca_empresa', "%$busca%", PDO::PARAM_STR);
 } else {
-    $sql = "SELECT r.*, f.nome_fornecedor FROM remedio r 
+    $sql = "SELECT r.*, f.nome_empresa 
+            FROM remedio r 
             LEFT JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor 
             ORDER BY r.nome_remedio ASC";
     $stmt = $pdo->prepare($sql);
@@ -119,9 +127,9 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <form action="buscar_remedio.php" method="POST">
-        <label for="busca">Digite o ID ou o Nome do Remédio:</label>
+        <label for="busca">Digite o ID, Nome, Tipo ou Nome da Empresa:</label>
         <input type="text" id="busca" name="busca">
-        <button type="submit"><i class="fa-solid fa-search"></i>Pesquisar<i class="fa-solid fa-search"></i></button>
+        <button type="submit"><i class="fa-solid fa-search"></i> Pesquisar <i class="fa-solid fa-search"></i></button>
     </form>
 
     <?php if (!empty($remedios)): ?>
@@ -134,7 +142,7 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Quantidade</th>
                 <th>Preço Unitário</th>
                 <th>Tipo</th>
-                <th>Fornecedor</th>
+                <th>Empresa</th>
                 <th>Ações</th>
             </tr>
         <?php foreach ($remedios as $remedio): ?>
@@ -146,10 +154,10 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($remedio['qnt_estoque']) ?></td>
                 <td><?= htmlspecialchars($remedio['preco_unit']) ?></td>
                 <td><?= htmlspecialchars($remedio['tipo']) ?></td>
-                <td><?= htmlspecialchars($remedio['nome_fornecedor']) ?></td>
+                <td><?= htmlspecialchars($remedio['nome_empresa']) ?></td>
                 <td>
-                    <a href="alterar_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>"><i class="fa-solid fa-edit"></i>Alterar</a>
-                    <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem certeza que deseja excluir este remédio?')"><i class="fa-solid fa-trash-alt"></i>Excluir</a>
+                    <a href="alterar_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>"><i class="fa-solid fa-edit"></i> Alterar</a>
+                    <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem certeza que deseja excluir este remédio?')"><i class="fa-solid fa-trash-alt"></i> Excluir</a>
                 </td>
             </tr>
         <?php endforeach; ?>
