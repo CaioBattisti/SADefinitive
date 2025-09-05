@@ -111,7 +111,7 @@ if (isset($_GET['id']) || isset($_POST['busca_usuario'])) {
 <form method="POST" action="alterar_usuario.php">
     <label for="busca_usuario">Digite o ID do Usuário(a):</label>
     <input type="number" name="busca_usuario" id="busca_usuario" value="<?= htmlspecialchars($busca_usuario) ?>">
-    <button type="submit">Buscar</button>
+    <button type="submit"><i class="fa-solid fa-search"></i>Buscar<i class="fa-solid fa-search"></i></button>
 </form>
 <br>
 

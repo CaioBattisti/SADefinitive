@@ -127,7 +127,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <form action="buscar_usuario.php" method="POST">
         <label for="busca">Digite o ID ou o Primeiro Nome:</label>
         <input type="text" id="busca" name="busca">
-        <button type="submit"><i class="fa-solid fa-search"></i>Pesquisar</button>
+        <button type="submit"><i class="fa-solid fa-search"></i>Pesquisar<i class="fa-solid fa-search"></i></button>
     </form>   
 
     <?php if (!empty($usuarios)): ?>

@@ -122,7 +122,7 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
     <form method="POST" action="alterar_remedio.php">
         <label for="id_busca">Digite o ID do Remédio:</label>
         <input type="number" name="id_busca" id="id_busca" value="<?= htmlspecialchars($id_busca) ?>">
-        <button type="submit">Buscar</button>
+        <button type="submit"><i class="fa-solid fa-search"></i>Buscar<i class="fa-solid fa-search"></i></button>
     </form>
     <br>
 
