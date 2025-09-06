@@ -162,7 +162,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <label>Endereço:</label>
         <input type="text" name="endereco">
         <label>Telefone:</label>
-        <input type="text" name="telefone">
+        <input type="text" id="telefone" name="telefone" placeholder="(XX) XXXXX-XXXX" maxlength="15" required>
         <label>Email:</label>
         <input type="email" name="email" required>
 
@@ -171,5 +171,34 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     </form>
 
     <a href="principal.php">Voltar para o Menu</a>
+
+<script>
+    const telefoneInput = document.getElementById('telefone');
+
+    telefoneInput.addEventListener('input', function(e) {
+        let valor = telefoneInput.value;
+
+        // Remove tudo que não for número
+        valor = valor.replace(/\D/g, '');
+
+        // Limita o tamanho máximo (2 para DDD + 9 para número)
+        if (valor.length > 11) {
+            valor = valor.substring(0, 11);
+        }
+
+        // Monta a máscara: (+XX) XXXXX-XXXX
+        if (valor.length > 0) {
+            valor = '(' + valor;
+        }
+        if (valor.length > 3) {
+            valor = valor.slice(0, 3) + ') ' + valor.slice(3);
+        }
+        if (valor.length > 10) {
+            valor = valor.slice(0, 10) + '-' + valor.slice(10);
+        }
+
+        telefoneInput.value = valor;
+    });
+</script>
 </body>
 </html>
