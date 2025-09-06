@@ -174,7 +174,5 @@ if($_SERVER['REQUEST_METHOD'] =="POST"){
     </form>
 
     <a href="principal.php">Voltar Para o Menu</a>
-
-    <script src="Mascara/script.js"></script>
 </body>
 </html>
