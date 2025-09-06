@@ -26,3 +26,7 @@ Para: maria@empresa.com
 Olá! Sua nova senha temporária é: 1L9d3ylg
 
 ----------------------
+Para: carlos@empresa.com
+Olá! Sua nova senha temporária é: 2hc1dDyA
+
+----------------------

@@ -49,8 +49,8 @@ $icones_menu = [
 $opcoes_menu = $permissoes[$id_perfil];
 
 // Verifica se o usuário tem permissão de ADM ou Secretária
-if ($_SESSION['perfil'] != 1 && $_SESSION['perfil'] != 2) {
-    echo "<script>alert('Acesso Negado!');window.location.href='principal.php';</script>";
+if ($_SESSION['perfil'] != 1 && $_SESSION['perfil'] != 2 && $_SESSION['perfil'] = 3) {
+    echo "<script>alert('Você não tem Permissão pra Alterar esse Remédio!');window.location.href='buscar_remedio.php';</script>";
     exit();
 }
 

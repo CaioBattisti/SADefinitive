@@ -51,7 +51,7 @@ $icones_menu = [
 $opcoes_menu = $permissoes[$id_perfil];
 
 // Verifica se o usuario tem permissão de ADM
-if ($_SESSION['perfil'] != 1) {
+if ($_SESSION['perfil'] != 1 ) {
     echo "Acesso Negado";
     exit();
 }
