@@ -50,12 +50,6 @@ $icones_menu = [
 // Obtendo as Opções Disponiveis para o Perfil Logado
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Verifica se o usuário tem permissão de ADM ou Secretária
-if ($_SESSION['perfil'] != 1 && $_SESSION['perfil'] != 2 && $_SESSION['perfil'] != 3) {
-    echo "<script>alert('Acesso Negado!');window.location.href='principal.php';</script>";
-    exit();
-}
-
 // Inicializa a variável para evitar erros
 $remedios = [];
 
