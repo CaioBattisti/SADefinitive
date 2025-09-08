@@ -50,8 +50,8 @@ $icones_menu = [
 // Obtendo as opções disponíveis para o perfil logado
 $opcoes_menu = $permissoes[$id_perfil];
 
-if ($_SESSION['perfil'] == 2 && $_SESSION['perfil'] == 3 && $_SESSION['perfil'] == 4) {
-    echo "<script>alert('Você não tem Permissão pra excluir esse Funcionario!');window.location.href='buscar_funcionario.php';</script>";
+if ($_SESSION['perfil'] != 1) {
+    echo "<script>alert('Você não tem permissão para excluir fornecedores!');window.location.href='buscar_fornecedor.php';</script>";
     exit();
 }
 
