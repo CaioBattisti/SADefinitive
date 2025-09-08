@@ -69,11 +69,11 @@ CREATE TABLE IF NOT EXISTS `fornecedor` (
 -- Despejando dados para a tabela `fornecedor`
 --
 INSERT INTO `fornecedor` (`id_fornecedor`, `nome_fornecedor`, `endereco`, `telefone`, `email`, `nome_empresa`, `permissao`) VALUES
-(1, 'José Silva', 'Av. Paulista, 1000', '11912345678', 'contato@techsupplies.com', 'Tech Supplies', 'Fornecedor: Nível de Muito Baixo Acesso(a)'),
-(2, 'Marcos Souza', 'Rua dos Gamers, 200', '21912345678', 'contato@gamerstore.com', 'Gamer Store', 'Fornecedor: Nível de Muito Baixo Acesso(a)'),
-(3, 'Fernanda Lima', 'Av. Brasil, 300', '31912345678', 'contato@eletronicosbr.com', 'Eletrônicos BR', 'Fornecedor: Nível de Muito Baixo Acesso(a)'),
-(4, 'Carlos Mendes', 'Rua da Tecnologia, 400', '41912345678', 'contato@infotech.com', 'InfoTech', 'Fornecedor: Nível de Muito Baixo Acesso(a)'),
-(5, 'Dick Wolf', 'Rua Chicago 214', '(78)8521-1254', 'fire@fire', 'Bombeiros Fire Ltda', 'Fornecedor: Nível de Muito Baixo Acesso(a)');
+(1, 'Marcos Pereira', 'Av. Paulista, 1000', '(11)98765-4321', 'contato@farmaciacentral.com', 'Farmácia Central', 'Secretária: Nível médio de Acesso'),
+(2, 'Maria dos Santos', 'Rua das Flores, 200', '(21)98765-4321', 'contato@distsaude.com', 'Distribuidora Saúde', 'Fornecedor: Nível de Muito Baixo Acesso'),
+(3, 'João Guilerme', 'Av. Brasil, 300', '(31)98765-4321', 'contato@medbrasil.com', 'Medicamentos Brasil', 'Funcionário: Nível de Baixo Acesso'),
+(4, 'Joana Divas', 'Rua da Tecnologia, 400', '(41)98765-4321', 'contato@pharmatech.com', 'PharmaTech', 'Funcionário: Nível de Baixo Acesso'),
+(5, 'Guilherme Silva', 'Rua Saúde, 500', '(78)98765-4321', 'contato@vidafarma.com', 'Vida Farma', 'Fornecedor: Nível de Muito Baixo Acesso');
 
 --
 -- ATUALIZAÇÃO: Comando para corrigir o valor incorreto na tabela `fornecedor`.
@@ -144,11 +144,11 @@ CREATE TABLE IF NOT EXISTS `remedio` (
 -- Despejando dados para a tabela `remedio`
 --
 INSERT INTO `remedio` (`id_remedio`, `nome_remedio`, `descricao`, `validade`, `qnt_estoque`, `preco_unit`, `tipo`, `id_fornecedor`) VALUES
-(1, 'Dipirona', 'Analgésico e antitérmico para dores e febre', '2027-01-20', 150, 8.50, 'Comprimido', 1),
-(2, 'Amoxicilina', 'Antibiótico de amplo espectro', '2026-11-15', 75, 25.00, 'Comprimido', 2),
-(3, 'Neosaldina', 'Analgésico e relaxante muscular', '2028-03-10', 200, 12.75, 'Gota', 1),
-(4, 'Cloridrato de Propranolol', 'Betabloqueador para tratamento de hipertensão', '2027-05-22', 90, 35.50, 'Comprimido', 3),
-(5, 'Loratadina', 'Anti-histamínico para alergias', '2026-08-30', 120, 15.20, 'Creme', 2);
+(1, 'Paracetamol', 'Analgésico e antitérmico', '2027-01-20', 150, 5.50, 'Comprimido', 1),
+(2, 'Ibuprofeno', 'Anti-inflamatório e analgésico', '2026-11-15', 100, 8.00, 'Comprimido', 2),
+(3, 'Amoxicilina', 'Antibiótico de amplo espectro', '2028-03-10', 200, 12.75, 'Cápsula', 3),
+(4, 'Omeprazol', 'Inibidor de bomba de prótons para tratamento gástrico', '2027-05-22', 90, 10.50, 'Cápsula', 4),
+(5, 'Dipirona', 'Analgésico e antitérmico', '2027-08-15', 120, 6.00, 'Gota', 5);
 
 --
 -- Estrutura para tabela `usuario`
