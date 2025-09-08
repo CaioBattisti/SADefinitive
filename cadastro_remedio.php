@@ -154,7 +154,7 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
         <label for="validade">Validade:</label>
         <input type="date" id="validade" name="validade" required>
 
-        <label for="qnt_estoque">Quantidade:</label>
+        <label for="qnt_estoque">Quantidade(Caixas):</label>
         <input type="number" id="qnt_estoque" name="qnt_estoque" min="0" required>
 
         <label for="preco_unit">Preço Unitário:</label>
