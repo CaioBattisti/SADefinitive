@@ -34,7 +34,8 @@ $permissoes = [
         "Buscar" => ["buscar_remedio.php"]
     ],
     4 => [
-        "Cadastrar" => ["cadastro_remedio.php"]
+        "Cadastrar" => ["cadastro_remedio.php"],
+        "Buscar" => ["buscar_remedio.php"]
     ]
 ];
 
