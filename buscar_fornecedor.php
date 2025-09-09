@@ -139,7 +139,8 @@ $fornecedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Telefone</th>
                 <th>Email</th>
                 <th>Nome da Empresa</th>
-                <th>Ações</th>
+                <th>Permissão</th>
+                <th>Ações<th>
             </tr>
         <?php foreach ($fornecedores as $fornecedor): ?>
             <tr>
@@ -149,6 +150,7 @@ $fornecedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($fornecedor['telefone']) ?></td>
                 <td><?= htmlspecialchars($fornecedor['email']) ?></td>
                 <td><?= htmlspecialchars($fornecedor['nome_empresa']) ?></td>
+                <td><?= htmlspecialchars($fornecedor['permissao']) ?></td>
                 <td>
                     <a href="alterar_fornecedor.php?id=<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>"><i class="fa-solid fa-edit"></i> Alterar Fornecedor</a>
                     <a href="excluir_fornecedor.php?id=<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>" onclick="return confirm('Tem certeza que deseja excluir esse Fornecedor?')"><i class="fa-solid fa-trash-alt"></i> Excluir Fornecedor</a>

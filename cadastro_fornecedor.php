@@ -108,6 +108,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         echo "<script>alert('Erro ao cadastrar fornecedor!');history.back();</script>";
     }
 }
+
+// Busca todos os perfis para o dropdown
+$stmtPerfis = $pdo->query("SELECT nome_perfil FROM perfil ORDER BY nome_perfil ASC");
+$perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE ahtml>
 <html lang="pt-BR">
@@ -166,7 +171,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <input type="text" id="telefone" name="telefone" placeholder="(XX) XXXXX-XXXX" maxlength="15" required>
         <label>Email:</label>
         <input type="email" name="email" required>
-
+        <label>Permissão:</label>
+        <select name="permissao" required>
+            <?php foreach ($perfis as $p): ?>
+                <option value="<?= htmlspecialchars($p['nome_perfil']) ?>"><?= htmlspecialchars($p['nome_perfil']) ?></option>
+            <?php endforeach; ?>
+        </select>
+        
         <button type="submit"><i class="fa-solid fa-check"></i> Salvar</button>
         <button type="reset"><i class="fa-solid fa-ban"></i> Cancelar</button>
     </form>

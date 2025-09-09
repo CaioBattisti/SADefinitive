@@ -106,11 +106,11 @@ CREATE TABLE IF NOT EXISTS `funcionario` (
 -- Despejando dados para a tabela `funcionario`
 --
 INSERT INTO `funcionario` (`id_funcionario`, `nome_funcionario`, `endereco`, `telefone`, `email`, `permissao`) VALUES
-(1, 'João Silva', 'Rua X, 500', '11955555555', 'joao@email.com', 'Adm: Nível Alto de Acesso!'),
-(2, 'Mariana Oliveira', 'Rua Y, 600', '21966666666', 'mariana@email.com', 'Secretária: Nível médio de Acesso(a)'),
-(3, 'Roberto Santos', 'Rua Z, 700', '31977777777', 'roberto@email.com', 'Funcionário: Nível de Baixo Acesso'),
-(4, 'Camila Ferreira', 'Rua W, 800', '41988888888', 'camila@email.com', 'Funcionário: Nível de Baixo Acesso'),
-(5, 'Jesse Pinkman', 'Rua Novo Mexico, 171', '2132145874', 'jesse@jesse.com', 'Adm: Nível Alto de Acesso!');
+(1, 'João Silva', 'Rua X, 500', '(11)95555-5555', 'joao@email.com', 'Adm: Nível Alto de Acesso!'),
+(2, 'Mariana Oliveira', 'Rua Y, 600', '(21)96666-6666', 'mariana@email.com', 'Secretária: Nível médio de Acesso(a)'),
+(3, 'Roberto Santos', 'Rua Z, 700', '(31)97777-7777', 'roberto@email.com', 'Funcionário: Nível de Baixo Acesso'),
+(4, 'Camila Ferreira', 'Rua W, 800', '(41)98888-8888', 'camila@email.com', 'Funcionário: Nível de Baixo Acesso'),
+(5, 'Jesse Pinkman', 'Rua Novo Mexico, 171', '(21)32145-3874', 'jesse@jesse.com', 'Adm: Nível Alto de Acesso!');
 
 --
 -- ATUALIZAÇÃO: Comando para corrigir o valor incorreto na tabela `funcionario`.
