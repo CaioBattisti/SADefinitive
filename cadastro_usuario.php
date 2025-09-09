@@ -8,16 +8,15 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-// Obtendo o Nome do Perfil do Usuario Logado
+// Obtendo Perfil do Usuário Logado
 $id_perfil = $_SESSION['perfil'];
 $sqlPerfil = "SELECT nome_perfil FROM perfil WHERE id_perfil = :id_perfil";
 $stmtPerfil = $pdo->prepare($sqlPerfil);
 $stmtPerfil->bindParam(':id_perfil', $id_perfil);
 $stmtPerfil->execute();
 $perfil = $stmtPerfil->fetch(PDO::FETCH_ASSOC);
-$nome_perfil = $perfil['nome_perfil'];
 
-// Definição das Permissões por Perfil
+// Definição das Permissões
 $permissoes = [
     1 => [
         "Cadastrar" => ["cadastro_usuario.php", "cadastro_fornecedor.php", "cadastro_remedio.php", "cadastro_funcionario.php"],
@@ -39,8 +38,6 @@ $permissoes = [
         "Buscar" => ["buscar_remedio.php"]
     ]
 ];
-
-// Mapeamento de ícones para as categorias de menu
 $icones_menu = [
     "Cadastrar" => "fa-solid fa-plus-circle",
     "Buscar" => "fa-solid fa-search",
