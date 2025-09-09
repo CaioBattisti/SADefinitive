@@ -38,6 +38,14 @@ $permissoes = [
     ]
 ];
 
+$opcoes_menu = $permissoes[$id_perfil];
+
+
+if ($_SESSION['perfil'] != 1 && $_SESSION['perfil'] != 2) {
+    echo "<script>alert('Você não tem permissão para alterar esse remédio!');window.location.href='buscar_remedio.php';</script>";
+    exit();
+}
+
 // Mapeamento de ícones para as categorias de menu
 $icones_menu = [
     "Cadastrar" => "fa-solid fa-plus-circle",
@@ -45,14 +53,6 @@ $icones_menu = [
     "Alterar" => "fa-solid fa-edit",
     "Excluir" => "fa-solid fa-trash-alt"
 ];
-
-$opcoes_menu = $permissoes[$id_perfil];
-
-// Verifica se o usuário tem permissão de ADM ou Secretária
-if ($_SESSION['perfil'] != 1 && $_SESSION['perfil'] != 2) {
-    echo "<script>alert('Acesso Negado!');window.location.href='principal.php';</script>";
-    exit();
-}
 
 // Inicializa variáveis
 $remedio = null;

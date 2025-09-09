@@ -34,7 +34,8 @@ $permissoes = [
         "Buscar" => ["buscar_remedio.php"]
     ],
     4 => [
-        "Cadastrar" => ["cadastro_remedio.php"]
+        "Cadastrar" => ["cadastro_remedio.php"],
+        "Buscar" => ["buscar_remedio.php"]
     ]
 ];
 
@@ -48,12 +49,6 @@ $icones_menu = [
 
 // Obtendo as Opções Disponiveis para o Perfil Logado
 $opcoes_menu = $permissoes[$id_perfil];
-
-// Verifica se o usuário tem permissão de ADM ou Secretária
-if ($_SESSION['perfil'] != 1 && $_SESSION['perfil'] != 2) {
-    echo "<script>alert('Acesso Negado!');window.location.href='principal.php';</script>";
-    exit();
-}
 
 // Processa o formulário
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -99,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 }
 
 // Busca todos os fornecedores para o dropdown
-$stmtFornecedores = $pdo->query("SELECT id_fornecedor, nome_fornecedor FROM fornecedor ORDER BY nome_fornecedor ASC");
+$stmtFornecedores = $pdo->query("SELECT id_fornecedor, nome_empresa FROM fornecedor ORDER BY nome_empresa ASC");
 $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
@@ -159,7 +154,7 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
         <label for="validade">Validade:</label>
         <input type="date" id="validade" name="validade" required>
 
-        <label for="qnt_estoque">Quantidade:</label>
+        <label for="qnt_estoque">Quantidade(Caixas):</label>
         <input type="number" id="qnt_estoque" name="qnt_estoque" min="0" required>
 
         <label for="preco_unit">Preço Unitário:</label>
@@ -174,11 +169,11 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
             <option value="Inalação">Inalação</option>
         </select>
         
-        <label for="id_fornecedor">Fornecedor:</label>
+        <label for="id_fornecedor">Nome da Empresa:</label>
         <select id="id_fornecedor" name="id_fornecedor" required>
             <?php foreach ($fornecedores as $fornecedor): ?>
                 <option value="<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>">
-                    <?= htmlspecialchars($fornecedor['nome_fornecedor']) ?>
+                    <?= htmlspecialchars($fornecedor['nome_empresa']) ?>
                 </option>
             <?php endforeach; ?>
         </select>

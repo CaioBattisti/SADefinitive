@@ -34,7 +34,8 @@ $permissoes = [
         "Buscar" => ["buscar_remedio.php"]
     ],
     4 => [
-        "Cadastrar" => ["cadastro_remedio.php"]
+        "Cadastrar" => ["cadastro_remedio.php"],
+        "Buscar" => ["buscar_remedio.php"]
     ]
 ];
 $icones_menu = [
@@ -48,7 +49,7 @@ $icones_menu = [
 $opcoes_menu = $permissoes[$id_perfil];
 
 // Verifica se o usuario tem permissão de ADM
-if ($_SESSION['perfil'] != 1) {
+if ($_SESSION['perfil'] != 1 ) {
     echo "Acesso Negado";
     exit();
 }
@@ -171,7 +172,5 @@ if($_SERVER['REQUEST_METHOD'] =="POST"){
     </form>
 
     <a href="principal.php">Voltar Para o Menu</a>
-
-    <script src="Mascara/script.js"></script>
 </body>
 </html>

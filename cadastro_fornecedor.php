@@ -35,7 +35,8 @@ $permissoes = [
         "Buscar" => ["buscar_remedio.php"]
     ],
     4 => [
-        "Cadastrar" => ["cadastro_remedio.php"]
+        "Cadastrar" => ["cadastro_remedio.php"],
+        "Buscar" => ["buscar_remedio.php"]
     ]
 ];
 
@@ -63,7 +64,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     $telefone = trim($_POST['telefone']);
     $email = trim($_POST['email']);
     $nome_empresa = trim($_POST['nome_empresa']);
-    $permissao = "fornecedor(a)";
+
+    // Aqui estava: $permissao = "fornecedor";
+    // Corrigido para valor válido da FK na tabela perfil:
+    $permissao = "Fornecedor: Nível de Muito Baixo Acesso";
 
     $errors = [];
 
@@ -83,8 +87,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     }
 
     if (!empty($errors)) {
-        // Usa json_encode para evitar problemas de aspas e quebras de linha no JS
-        echo "<script>alert(' . json_encode(implode(\"\\n\", $errors)) . ');history.back();</script>";
+        // Corrigido para imprimir o alert corretamente em JavaScript
+        echo "<script>alert('". implode("\\n", $errors) ."');history.back();</script>";
         exit;
     }
 
@@ -104,6 +108,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         echo "<script>alert('Erro ao cadastrar fornecedor!');history.back();</script>";
     }
 }
+
+// Busca todos os perfis para o dropdown
+$stmtPerfis = $pdo->query("SELECT nome_perfil FROM perfil ORDER BY nome_perfil ASC");
+$perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE ahtml>
 <html lang="pt-BR">
@@ -159,14 +168,49 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <label>Endereço:</label>
         <input type="text" name="endereco">
         <label>Telefone:</label>
-        <input type="text" name="telefone">
+        <input type="text" id="telefone" name="telefone" placeholder="(XX) XXXXX-XXXX" maxlength="15" required>
         <label>Email:</label>
         <input type="email" name="email" required>
-
+        <label>Permissão:</label>
+        <select name="permissao" required>
+            <?php foreach ($perfis as $p): ?>
+                <option value="<?= htmlspecialchars($p['nome_perfil']) ?>"><?= htmlspecialchars($p['nome_perfil']) ?></option>
+            <?php endforeach; ?>
+        </select>
+        
         <button type="submit"><i class="fa-solid fa-check"></i> Salvar</button>
         <button type="reset"><i class="fa-solid fa-ban"></i> Cancelar</button>
     </form>
 
     <a href="principal.php">Voltar para o Menu</a>
+
+<script>
+    const telefoneInput = document.getElementById('telefone');
+
+    telefoneInput.addEventListener('input', function(e) {
+        let valor = telefoneInput.value;
+
+        // Remove tudo que não for número
+        valor = valor.replace(/\D/g, '');
+
+        // Limita o tamanho máximo (2 para DDD + 9 para número)
+        if (valor.length > 11) {
+            valor = valor.substring(0, 11);
+        }
+
+        // Monta a máscara: (+XX) XXXXX-XXXX
+        if (valor.length > 0) {
+            valor = '(' + valor;
+        }
+        if (valor.length > 3) {
+            valor = valor.slice(0, 3) + ') ' + valor.slice(3);
+        }
+        if (valor.length > 10) {
+            valor = valor.slice(0, 10) + '-' + valor.slice(10);
+        }
+
+        telefoneInput.value = valor;
+    });
+</script>
 </body>
 </html>

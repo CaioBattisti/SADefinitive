@@ -35,7 +35,8 @@ $permissoes = [
         "Buscar" => ["buscar_remedio.php"]
     ],
     4 => [
-        "Cadastrar" => ["cadastro_remedio.php"]
+        "Cadastrar" => ["cadastro_remedio.php"],
+        "Buscar" => ["buscar_remedio.php"]
     ]
 ];
 
@@ -50,9 +51,8 @@ $icones_menu = [
 // Obtendo as Opções Disponiveis para o Perfil Logado
 $opcoes_menu = $permissoes[$id_perfil];
 
-// Apenas administrador pode excluir fornecedor
-if ($_SESSION['perfil'] == 2) {
-    echo "<script>alert('Você não tem Permissão pra excluir esse Fornecedor!');window.location.href='buscar_fornecedor.php';</script>";
+if ($_SESSION['perfil'] != 1) {
+    echo "<script>alert('Você não tem permissão para excluir fornecedores!');window.location.href='buscar_fornecedor.php';</script>";
     exit();
 }
 

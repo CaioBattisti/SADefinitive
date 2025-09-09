@@ -34,7 +34,8 @@ $permissoes = [
         "Buscar" => ["buscar_remedio.php"]
     ],
     4 => [
-        "Cadastrar" => ["cadastro_remedio.php"]
+        "Cadastrar" => ["cadastro_remedio.php"],
+        "Buscar" => ["buscar_remedio.php"]
     ]
 ];
 
@@ -133,8 +134,7 @@ $perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
             <input type="text" name="endereco" value="<?= htmlspecialchars($funcionario['endereco']) ?>">
 
             <label>Telefone:</label>
-            <input type="text" name="telefone" value="<?= htmlspecialchars($funcionario['telefone']) ?>">
-
+            <input type="text" id="telefone" name="telefone" value="<?= htmlspecialchars($fornecedor['telefone']) ?>">
             <label>Email:</label>
             <input type="email" name="email" value="<?= htmlspecialchars($funcionario['email']) ?>" required>
 
@@ -155,5 +155,39 @@ $perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
     <?php endif; ?>
 
     <a href="principal.php">Voltar Para o Menu</a>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const telefoneInput = document.getElementById('telefone');
+
+        if (telefoneInput) {
+            telefoneInput.addEventListener('input', function (e) {
+                let valor = telefoneInput.value;
+
+                // Remove tudo que não for número
+                valor = valor.replace(/\D/g, '');
+
+                // Limita o tamanho máximo (2 para DDD + 9 para número)
+                if (valor.length > 11) {
+                    valor = valor.substring(0, 11);
+                }
+
+                // Monta a máscara: (XX) XXXXX-XXXX
+                if (valor.length > 0) {
+                    valor = '(' + valor;
+                }
+                if (valor.length > 3) {
+                    valor = valor.slice(0, 3) + ') ' + valor.slice(3);
+                }
+                if (valor.length > 10) {
+                    valor = valor.slice(0, 10) + '-' + valor.slice(10);
+                }
+
+                telefoneInput.value = valor;
+            });
+        }
+    });
+</script>
+
 </body>
 </html>
