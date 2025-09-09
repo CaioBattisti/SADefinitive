@@ -110,5 +110,31 @@ $opcoes_menu = $permissoes[$id_perfil];
             </ul>
         </nav>
     </div>
+    <!-- Carousel -->
+    <div class="carousel-container" style="width: 100%; max-width: 1200px; overflow: hidden; margin: 20px auto; position: relative; border: 2px solid #ccc; border-radius: 10px;">
+        <div class="carousel" style="display: flex; transition: transform 0.5s ease-in-out;">
+            <img src="Armazem_Imagens.jpg" alt="Image 1" style="min-width: 100%; height: 600px; object-fit: cover;">
+            <img src="Armazem_Imagens2.jpg" alt="Image 2" style="min-width: 100%; height: 600px; object-fit: cover;">
+            <img src="Armazem_Imagens3.jpg" alt="Image 3" style="min-width: 100%; height: 600px; object-fit: cover;">
+        </div>
+        <button class="prev" onclick="moveCarousel(-1)" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer;">❮</button>
+        <button class="next" onclick="moveCarousel(1)" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background-color: rgba(0, 0, 0, 0.5); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer;">❯</button>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+
+        function moveCarousel(direction) {
+            const carousel = document.querySelector('.carousel');
+            const totalImages = carousel.children.length;
+            currentIndex = (currentIndex + direction + totalImages) % totalImages;
+            carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        // Automatically move the carousel every 5 seconds
+        setInterval(() => {
+            moveCarousel(1);
+        }, 5000); // 5000ms = 5 seconds
+    </script>
 </body>
 </html>
