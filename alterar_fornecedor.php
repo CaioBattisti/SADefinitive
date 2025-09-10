@@ -49,6 +49,11 @@ $icones_menu = [
 
 $opcoes_menu = $permissoes[$id_perfil];
 
+// **AJUSTE AQUI:** Busca todos os perfis do banco de dados para popular o select
+$sqlPerfis = "SELECT id_perfil, nome_perfil FROM perfil ORDER BY nome_perfil";
+$stmtPerfis = $pdo->query($sqlPerfis);
+$perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
+
 // Inicializa variável
 $fornecedor = null;
 $id_busca = "";
@@ -58,6 +63,7 @@ if (isset($_GET['id']) || isset($_POST['id_busca'])) {
     $id = isset($_GET['id']) ? $_GET['id'] : $_POST['id_busca'];
     $id_busca = $id;
 
+    // **AJUSTE AQUI:** Removido o JOIN. Agora selecionamos diretamente a coluna 'permissao' da tabela 'fornecedor'.
     $stmt = $pdo->prepare("SELECT * FROM fornecedor WHERE id_fornecedor = :id");
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
@@ -132,8 +138,17 @@ if (isset($_GET['id']) || isset($_POST['id_busca'])) {
     <label>Email:</label>
     <input type="email" name="email" value="<?= htmlspecialchars($fornecedor['email']) ?>" required>
 
+    <label>Permissão:</label>
+        <select name="permissao" required>
+        <?php foreach ($perfis as $p): ?>
+            <option value="<?= htmlspecialchars($p['nome_perfil']) ?>" <?= ($p['nome_perfil'] == $fornecedor['permissao']) ? 'selected' : '' ?>>
+                <?= htmlspecialchars($p['nome_perfil']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+
     <button type="submit"><i class="fa-solid fa-check"></i> Salvar Alterações</button>
-    <button type="button" onclick="window.location.href='buscar_fornecedor.php'"><i class="fa-solid fa-trash-alt"></i><i class="fa-solid fa-ban"></i> Cancelar</button>
+    <button type="button" onclick="window.location.href='buscar_fornecedor.php'"><i class="fa-solid fa-ban"></i> Cancelar</button>
 </form>
 <?php elseif ($id_busca !== ""): ?>
     <p>Nenhum fornecedor encontrado para o ID informado!</p>

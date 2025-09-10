@@ -134,7 +134,8 @@ $perfis = $stmtPerfis->fetchAll(PDO::FETCH_ASSOC);
             <input type="text" name="endereco" value="<?= htmlspecialchars($funcionario['endereco']) ?>">
 
             <label>Telefone:</label>
-            <input type="text" id="telefone" name="telefone" value="<?= htmlspecialchars($fornecedor['telefone']) ?>">
+            <input type="text" id="telefone" name="telefone" value="<?= htmlspecialchars($funcionario['telefone']) ?>">
+            
             <label>Email:</label>
             <input type="email" name="email" value="<?= htmlspecialchars($funcionario['email']) ?>" required>
 
