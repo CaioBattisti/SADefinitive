@@ -158,8 +158,8 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </select>
 
-            <button type="submit"><i class="fa-solid fa-check"></i>Salvar Alterações</button>
-            <button type="button" onclick="window.location.href='buscar_remedio.php'">Cancelar</button>
+            <button type="submit"><i class="fa-solid fa-check"></i> Salvar Alterações</button>
+            <button type="button" onclick="window.location.href='buscar_remedio.php'"> <i class="fa-solid fa-ban"></i> Cancelar</button>
         </form>
     <?php elseif ($id_busca !== ""): ?>
         <p>Nenhum remédio encontrado para o ID informado!</p>

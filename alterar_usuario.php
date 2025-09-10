@@ -139,8 +139,8 @@ if (isset($_GET['id']) || isset($_POST['busca_usuario'])) {
                 <input type="password" id="nova_senha" name="nova_senha" placeholder="Digite a nova senha (opcional)">
         <?php endif; ?>
 
-    <button type="submit">Salvar Alterações</button>
-    <button type="button" onclick="window.location.href='buscar_usuario.php'">Cancelar</button>
+    <button type="submit"><i class="fa-solid fa-check"></i> Salvar Alterações</button>
+    <button type="button" onclick="window.location.href='buscar_usuario.php'"><i class="fa-solid fa-ban"></i> Cancelar</button>
 </form>
 <?php elseif ($busca_usuario !== ""): ?>
     <p>Nenhum Usuário encontrado para o ID informado!</p>

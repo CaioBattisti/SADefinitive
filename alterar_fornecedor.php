@@ -132,8 +132,8 @@ if (isset($_GET['id']) || isset($_POST['id_busca'])) {
     <label>Email:</label>
     <input type="email" name="email" value="<?= htmlspecialchars($fornecedor['email']) ?>" required>
 
-    <button type="submit"><i class="fa-solid fa-check"></i>Salvar Alterações</button>
-    <button type="button" onclick="window.location.href='buscar_fornecedor.php'"><i class="fa-solid fa-trash-alt"></i>Cancelar</button>
+    <button type="submit"><i class="fa-solid fa-check"></i> Salvar Alterações</button>
+    <button type="button" onclick="window.location.href='buscar_fornecedor.php'"><i class="fa-solid fa-trash-alt"></i><i class="fa-solid fa-ban"></i> Cancelar</button>
 </form>
 <?php elseif ($id_busca !== ""): ?>
     <p>Nenhum fornecedor encontrado para o ID informado!</p>

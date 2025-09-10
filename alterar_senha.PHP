@@ -61,7 +61,7 @@ if($_SERVER['REQUEST_METHOD'] =="POST"){
             <input type="checkbox" onclick="mostrarSenha()">Mostrar Senha 
         </label>
 
-        <button type="submit"><i class="fa-solid fa-check"></i>Salvar Nova Senha</button>
+        <button type="submit"><i class="fa-solid fa-check"></i> Salvar Nova Senha</button>
     </form>
 
 <script>
