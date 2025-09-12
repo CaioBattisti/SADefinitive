@@ -40,7 +40,6 @@ $permissoes = [
 
 $opcoes_menu = $permissoes[$id_perfil];
 
-
 if ($_SESSION['perfil'] != 1 && $_SESSION['perfil'] != 2) {
     echo "<script>alert('Você não tem permissão para alterar esse remédio!');window.location.href='buscar_remedio.php';</script>";
     exit();
@@ -58,7 +57,7 @@ $icones_menu = [
 $remedio = null;
 $id_busca = "";
 
-// Se recebeu ID pela URL (via buscar_remedio.php) ou via formulário de busca
+// Se recebeu ID pela URL ou via formulário
 if (isset($_GET['id']) || isset($_POST['id_busca'])) {
     $id = isset($_GET['id']) ? $_GET['id'] : $_POST['id_busca'];
     $id_busca = $id;
@@ -72,7 +71,6 @@ if (isset($_GET['id']) || isset($_POST['id_busca'])) {
 // Busca todos os fornecedores para o dropdown
 $stmtFornecedores = $pdo->query("SELECT id_fornecedor, nome_fornecedor FROM fornecedor ORDER BY nome_fornecedor ASC");
 $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -122,12 +120,12 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
     <form method="POST" action="alterar_remedio.php">
         <label for="id_busca">Digite o ID do Remédio:</label>
         <input type="number" name="id_busca" id="id_busca" value="<?= htmlspecialchars($id_busca) ?>">
-        <button type="submit"><i class="fa-solid fa-search"></i> Buscar <i class="fa-solid fa-search"></i></button>
+        <button type="submit"><i class="fa-solid fa-search"></i> Buscar</button>
     </form>
     <br>
 
     <?php if ($remedio): ?>
-        <form method="POST" action="processa_alteracao_remedio.php">
+        <form method="POST" action="processa_alteracao_remedio.php" enctype="multipart/form-data">
             <input type="hidden" name="id_remedio" value="<?= $remedio['id_remedio'] ?>">
 
             <label>Nome do Remédio:</label>
@@ -151,8 +149,7 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
             <label for="id_fornecedor">Fornecedor:</label>
             <select id="id_fornecedor" name="id_fornecedor" required>
                 <?php foreach ($fornecedores as $fornecedor): ?>
-                    <option value="<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>"
-                        <?= ($fornecedor['id_fornecedor'] == $remedio['id_fornecedor']) ? 'selected' : '' ?>>
+                    <option value="<?= htmlspecialchars($fornecedor['id_fornecedor']) ?>" <?= ($fornecedor['id_fornecedor'] == $remedio['id_fornecedor']) ? 'selected' : '' ?>>
                         <?= htmlspecialchars($fornecedor['nome_fornecedor']) ?>
                     </option>
                 <?php endforeach; ?>
@@ -161,14 +158,14 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
             <div class="form-group">
                 <label for="imagem">Imagem do Remédio:</label>
                 <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*">
-                <?php if (!empty($dados['imagem'])): ?>
+                <?php if (!empty($remedio['imagem'])): ?>
                     <p>Imagem atual:</p>
-                    <img src="uploads/<?php echo htmlspecialchars($dados['imagem']); ?>" width="120" alt="Imagem atual">
+                    <img src="uploads/<?= htmlspecialchars($remedio['imagem']); ?>" width="120" alt="Imagem atual">
                 <?php endif; ?>
             </div>
 
             <button type="submit"><i class="fa-solid fa-check"></i> Salvar Alterações</button>
-            <button type="button" onclick="window.location.href='buscar_remedio.php'"> <i class="fa-solid fa-ban"></i> Cancelar</button>
+            <button type="button" onclick="window.location.href='buscar_remedio.php'"><i class="fa-solid fa-ban"></i> Cancelar</button>
         </form>
     <?php elseif ($id_busca !== ""): ?>
         <p>Nenhum remédio encontrado para o ID informado!</p>

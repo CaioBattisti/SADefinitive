@@ -57,6 +57,21 @@ if ($_SESSION['perfil'] != 1) {
 // Exclusão
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
+
+    // Primeiro, buscar o nome da imagem para deletar do servidor
+    $stmtImg = $pdo->prepare("SELECT imagem FROM remedio WHERE id_remedio = :id");
+    $stmtImg->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmtImg->execute();
+    $remedio = $stmtImg->fetch(PDO::FETCH_ASSOC);
+
+    if ($remedio && !empty($remedio['imagem'])) {
+        $caminhoImagem = "uploads/" . $remedio['imagem'];
+        if (file_exists($caminhoImagem)) {
+            unlink($caminhoImagem); // Exclui o arquivo
+        }
+    }
+
+    // Agora exclui o registro do banco
     $sql = "DELETE FROM remedio WHERE id_remedio = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -75,7 +90,6 @@ $sql = "SELECT r.*, f.nome_fornecedor FROM remedio r
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -124,34 +138,53 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
     
     <?php if(!empty($remedios)): ?>
-        <table border="1">
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Descrição</th>
-                <th>Validade</th>
-                <th>Quantidade</th>
-                <th>Preço Unitário</th>
-                <th>Tipo</th>
-                <th>Fornecedor</th>
-                <th>Ações</th>
-            </tr>
-            <?php foreach ($remedios as $remedio): ?>
-                <tr>
-                    <td><?= htmlspecialchars($remedio['id_remedio']) ?></td>
-                    <td><?= htmlspecialchars($remedio['nome_remedio']) ?></td>
-                    <td><?= htmlspecialchars($remedio['descricao']) ?></td>
-                    <td><?= htmlspecialchars($remedio['validade']) ?></td>
-                    <td><?= htmlspecialchars($remedio['qnt_estoque']) ?></td>
-                    <td><?= htmlspecialchars($remedio['preco_unit']) ?></td>
-                    <td><?= htmlspecialchars($remedio['tipo']) ?></td>
-                    <td><?= htmlspecialchars($remedio['nome_fornecedor']) ?></td>
-                    <td>
-                        <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem certeza que deseja excluir este remédio?')"><i class="fa-solid fa-trash-açt"></i> Excluir</a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th>Validade</th>
+        <th>Quantidade</th>
+        <th>Preço Unitário</th>
+        <th>Tipo</th>
+        <th>Fornecedor</th>
+        <th>Imagem</th>
+        <th>Ações</th>
+    </tr>
+    <?php foreach ($remedios as $remedio): ?>
+        <tr>
+            <td><?= htmlspecialchars($remedio['id_remedio']) ?></td>
+            <td><?= htmlspecialchars($remedio['nome_remedio']) ?></td>
+            <td><?= htmlspecialchars($remedio['descricao']) ?></td>
+            <td><?= htmlspecialchars($remedio['validade']) ?></td>
+            <td><?= htmlspecialchars($remedio['qnt_estoque']) ?></td>
+            <td><?= htmlspecialchars($remedio['preco_unit']) ?></td>
+            <td><?= htmlspecialchars($remedio['tipo']) ?></td>
+            <td><?= htmlspecialchars($remedio['nome_fornecedor']) ?></td>
+            <td>
+                <?php if (!empty($remedio['imagem'])): ?>
+                    <button type="button" onclick="mostrarImagem('uploads/<?= htmlspecialchars($remedio['imagem']); ?>')">
+                        <i class="fa-solid fa-image"></i> Ver Imagem
+                    </button>
+                <?php else: ?>
+                    Sem imagem
+                <?php endif; ?>
+            </td>
+            <td>
+                <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem certeza que deseja excluir este remédio?')">
+                    <i class="fa-solid fa-trash-alt"></i> Excluir
+                </a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+
+    <script>
+        function mostrarImagem(caminho) {
+            // Abre a imagem em nova aba/janela
+            window.open(caminho, "_blank", "width=600,height=400");
+        }
+    </script>
     <?php else: ?>
         <p>Nenhum remédio encontrado.</p>
     <?php endif; ?>
