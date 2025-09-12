@@ -144,12 +144,12 @@ CREATE TABLE IF NOT EXISTS `remedio` (
 --
 -- Despejando dados para a tabela `remedio`
 --
-INSERT INTO `remedio` (`id_remedio`, `nome_remedio`, `descricao`, `validade`, `qnt_estoque`, `preco_unit`, `tipo`, `id_fornecedor`) VALUES
-(1, 'Paracetamol', 'Analgésico e antitérmico', '2027-01-20', 150, 5.50, 'Comprimido', 1),
-(2, 'Ibuprofeno', 'Anti-inflamatório e analgésico', '2026-11-15', 100, 8.00, 'Comprimido', 2),
-(3, 'Amoxicilina', 'Antibiótico de amplo espectro', '2028-03-10', 200, 12.75, 'Cápsula', 3),
-(4, 'Omeprazol', 'Inibidor de bomba de prótons para tratamento gástrico', '2027-05-22', 90, 10.50, 'Cápsula', 4),
-(5, 'Dipirona', 'Analgésico e antitérmico', '2027-08-15', 120, 6.00, 'Gota', 5);
+INSERT INTO `remedio` (`id_remedio`, `nome_remedio`, `descricao`, `validade`, `qnt_estoque`, `preco_unit`, `tipo`, `id_fornecedor`, `imagem`) VALUES
+(1, 'Paracetamol', 'Analgésico e antitérmico', '2027-01-20', 150, 5.50, 'Comprimido', 1, 'paracetamol.jpg'),
+(2, 'Ibuprofeno', 'Anti-inflamatório e analgésico', '2026-11-15', 100, 8.00, 'Comprimido', 2, 'ibuprofeno.jpg'),
+(3, 'Amoxicilina', 'Antibiótico de amplo espectro', '2028-03-10', 200, 12.75, 'Cápsula', 3, 'amoxicilina.jpg'),
+(4, 'Omeprazol', 'Inibidor de bomba de prótons para tratamento gástrico', '2027-05-22', 90, 10.50, 'Cápsula', 4, 'omeprazol.jpg'),
+(5, 'Dipirona', 'Analgésico e antitérmico', '2027-08-15', 120, 6.00, 'Gota', 5, 'dipirona.jpg');
 
 --
 -- Estrutura para tabela `usuario`

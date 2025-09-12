@@ -53,23 +53,29 @@ $opcoes_menu = $permissoes[$id_perfil];
 // Inicializa a variável para evitar erros
 $remedios = [];
 
-// Se o Formulário for Enviado, Busca pelo id, nome, tipo ou nome da empresa
+// Se o Formulário for Enviado, busca pelo ID ou Nome do remédio
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['busca'])) {
     $busca = trim($_POST['busca']);
-    $sql = "SELECT r.*, f.nome_empresa 
-            FROM remedio r 
-            LEFT JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor 
-            WHERE 
-                r.id_remedio = :busca_id OR
-                LOWER(r.nome_remedio) LIKE LOWER(:busca_nome) OR
-                LOWER(r.tipo) LIKE LOWER(:busca_tipo) OR
-                LOWER(f.nome_empresa) LIKE LOWER(:busca_empresa)
-            ORDER BY r.nome_remedio ASC";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':busca_id', $busca, PDO::PARAM_INT);
-    $stmt->bindValue(':busca_nome', "%$busca%", PDO::PARAM_STR);
-    $stmt->bindValue(':busca_tipo', "%$busca%", PDO::PARAM_STR);
-    $stmt->bindValue(':busca_empresa', "%$busca%", PDO::PARAM_STR);
+    
+    if (is_numeric($busca)) {
+        // Busca por ID
+        $sql = "SELECT r.*, f.nome_empresa 
+                FROM remedio r 
+                LEFT JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor 
+                WHERE r.id_remedio = :busca_id
+                ORDER BY r.nome_remedio ASC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':busca_id', $busca, PDO::PARAM_INT);
+    } else {
+        // Busca por Nome do remédio
+        $sql = "SELECT r.*, f.nome_empresa 
+                FROM remedio r 
+                LEFT JOIN fornecedor f ON r.id_fornecedor = f.id_fornecedor 
+                WHERE LOWER(r.nome_remedio) LIKE LOWER(:busca_nome)
+                ORDER BY r.nome_remedio ASC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':busca_nome', "%$busca%", PDO::PARAM_STR);
+    }
 } else {
     $sql = "SELECT r.*, f.nome_empresa 
             FROM remedio r 
@@ -128,7 +134,7 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <form action="buscar_remedio.php" method="POST">
-        <label for="busca">Digite o ID, Nome, Tipo ou Nome da Empresa:</label>
+        <label for="busca">Digite o ID ou Nome do Remédio:</label>
         <input type="text" id="busca" name="busca">
         <button type="submit"><i class="fa-solid fa-search"></i> Pesquisar</button>
     </form>
