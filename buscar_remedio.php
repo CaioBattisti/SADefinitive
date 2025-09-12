@@ -130,7 +130,7 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <form action="buscar_remedio.php" method="POST">
         <label for="busca">Digite o ID, Nome, Tipo ou Nome da Empresa:</label>
         <input type="text" id="busca" name="busca">
-        <button type="submit"><i class="fa-solid fa-search"></i> Pesquisar <i class="fa-solid fa-search"></i></button>
+        <button type="submit"><i class="fa-solid fa-search"></i> Pesquisar</button>
     </form>
 
     <?php if (!empty($remedios)): ?>
@@ -144,6 +144,7 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Preço Unitário</th>
                 <th>Tipo</th>
                 <th>Empresa</th>
+                <th>Imagem</th>
                 <th>Ações</th>
             </tr>
         <?php foreach ($remedios as $remedio): ?>
@@ -156,6 +157,15 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($remedio['preco_unit']) ?></td>
                 <td><?= htmlspecialchars($remedio['tipo']) ?></td>
                 <td><?= htmlspecialchars($remedio['nome_empresa']) ?></td>
+                <td>
+                    <?php if (!empty($remedio['imagem'])): ?>
+                        <button type="button" onclick="mostrarImagem('uploads/<?= htmlspecialchars($remedio['imagem']) ?>')">
+                            <i class="fa-solid fa-image"></i> Ver Imagem
+                        </button>
+                    <?php else: ?>
+                        Sem imagem
+                    <?php endif; ?>
+                </td>
                 <td>
                     <a href="alterar_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>"><i class="fa-solid fa-edit"></i> Alterar</a>
                     <a href="excluir_remedio.php?id=<?= htmlspecialchars($remedio['id_remedio']) ?>" onclick="return confirm('Tem certeza que deseja excluir este remédio?')"><i class="fa-solid fa-trash-alt"></i> Excluir</a>
@@ -172,5 +182,12 @@ $remedios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php else: ?>
         <a href="principal.php">Voltar para o Menu</a>
     <?php endif; ?>
+
+    <script>
+    function mostrarImagem(caminho) {
+        // Abre a imagem em nova aba/janela
+        window.open(caminho, "_blank", "width=600,height=400");
+    }
+    </script>
 </body>
 </html>

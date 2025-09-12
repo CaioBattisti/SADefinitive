@@ -158,6 +158,15 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </select>
 
+            <div class="form-group">
+                <label for="imagem">Imagem do Remédio:</label>
+                <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*">
+                <?php if (!empty($dados['imagem'])): ?>
+                    <p>Imagem atual:</p>
+                    <img src="uploads/<?php echo htmlspecialchars($dados['imagem']); ?>" width="120" alt="Imagem atual">
+                <?php endif; ?>
+            </div>
+
             <button type="submit"><i class="fa-solid fa-check"></i> Salvar Alterações</button>
             <button type="button" onclick="window.location.href='buscar_remedio.php'"> <i class="fa-solid fa-ban"></i> Cancelar</button>
         </form>

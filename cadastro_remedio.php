@@ -70,13 +70,28 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $errors[] = "Este remédio já está cadastrado!";
     }
 
+    // ---- TRATAR IMAGEM ----
+    $imagem = null;
+    if (!empty($_FILES['imagem']['name'])) {
+        $targetDir = "uploads/";
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+        $fileName = time() . "_" . basename($_FILES["imagem"]["name"]);
+        $targetFilePath = $targetDir . $fileName;
+
+        if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $targetFilePath)) {
+            $imagem = $fileName; // salva o nome no banco
+        }
+    }
+
     if (!empty($errors)) {
         echo "<script>alert('" . implode("\\n", $errors) . "');history.back();</script>";
         exit;
     }
 
-    $sql = "INSERT INTO remedio (nome_remedio, descricao, validade, qnt_estoque, preco_unit, tipo, id_fornecedor) 
-            VALUES (:nome_remedio, :descricao, :validade, :qnt_estoque, :preco_unit, :tipo, :id_fornecedor)";
+    $sql = "INSERT INTO remedio (nome_remedio, descricao, validade, qnt_estoque, preco_unit, tipo, id_fornecedor, imagem) 
+            VALUES (:nome_remedio, :descricao, :validade, :qnt_estoque, :preco_unit, :tipo, :id_fornecedor, :imagem)";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':nome_remedio', $nome_remedio);
     $stmt->bindParam(':descricao', $descricao);
@@ -85,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $stmt->bindParam(':preco_unit', $preco_unit);
     $stmt->bindParam(':tipo', $tipo);
     $stmt->bindParam(':id_fornecedor', $id_fornecedor);
+    $stmt->bindParam(':imagem', $imagem);
 
     if ($stmt->execute()) {
         echo "<script>alert('Remédio cadastrado com sucesso!');window.location.href='cadastro_remedio.php';</script>";
@@ -96,7 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 // Busca todos os fornecedores para o dropdown
 $stmtFornecedores = $pdo->query("SELECT id_fornecedor, nome_empresa FROM fornecedor ORDER BY nome_empresa ASC");
 $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -144,7 +159,7 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <form action="cadastro_remedio.php" method="POST" id="formCadastro">
+    <form action="cadastro_remedio.php" method="POST" id="formCadastro" enctype="multipart/form-data">
         <label for="nome_remedio">Nome do Remédio:</label>
         <input type="text" id="nome_remedio" name="nome_remedio" required>
 
@@ -177,6 +192,11 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
                 </option>
             <?php endforeach; ?>
         </select>
+
+        <div class="form-group">
+            <label for="imagem">Imagem do Remédio:</label>
+            <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*">
+        </div>
 
         <button type="submit"><i class="fa-solid fa-check"></i> Salvar</button>
         <button type="reset"><i class="fa-solid fa-ban"></i> Cancelar</button>
