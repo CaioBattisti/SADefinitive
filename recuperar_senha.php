@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
 
         // Simula o envio do email (Grava em txt)
         simularEnvioEmail($email, $senha_temporaria);
-        echo "<script>alert('Uma Senha temporária foi gerada e eviada (Simulação). Verifique o arquivo emails_simulados.txt');window.location.href='index.php';</script>";    
+        echo "<script>alert('Uma Senha temporária foi gerada e eviada (Simulação). Verifique o arquivo emails_simulados.txt');window.location.href='login.php';</script>";    
     } else {
         echo "<script>alert('E-mail não encontrado');</script>";
     }
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
 
         <button type="submit">Enviar a Senha Temporária</button>
 
-        <a href="index.php">Voltar para o Login</a>
+        <a href="login.php">Voltar para o Login</a>
     </form>
 </body>
 </html>
