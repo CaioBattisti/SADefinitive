@@ -7,7 +7,6 @@
 $host = 'localhost';
 
 // $dbname: Define o nome do banco de dados ao qual queremos nos conectar.
-// Neste caso, o banco de dados se chama 'senai_login'.
 $dbname = 'sa_definitive';
 
 // $user: Define o nome de usuário para acessar o banco de dados.
@@ -32,7 +31,7 @@ try {
     // Ele especifica:
     //   - 'mysql': o tipo de driver do banco de dados (neste caso, MySQL).
     //   - "host=$host": o servidor do banco de dados (o valor da variável $host, ou seja, 'localhost').
-    //   - "dbname=$dbname": o nome do banco de dados (o valor da variável $dbname, ou seja, 'senai_login').
+    //   - "dbname=$dbname": o nome do banco de dados (o valor da variável $dbname, ou seja, 'senai_Index').
     // As variáveis $user e $pass são o nome de usuário e a senha para autenticação.
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
 
@@ -45,7 +44,7 @@ try {
 
     // Se a conexão for bem-sucedida, a variável $pdo agora contém um objeto
     // que representa a conexão com o banco de dados. Este objeto $pdo
-    // será usado em outros scripts (como o login.php) para executar consultas SQL.
+    // será usado em outros scripts (como o Index.php) para executar consultas SQL.
 
 } catch (PDOException $e) {
     // Se ocorrer qualquer erro (uma PDOException) durante a tentativa de conexão no bloco 'try',

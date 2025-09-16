@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($usuario && password_verify($senha, $usuario['senha'])) {
-        // Login bem-sucedido, e define variaveis de sessão
+        // Index bem-sucedido, e define variaveis de sessão
         $_SESSION['usuario'] = $usuario['nome'];
         $_SESSION['perfil'] = $usuario['id_perfil'];
         $_SESSION['id_usuario'] = $usuario['id_usuario'];
@@ -29,8 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
             exit();
         }
     }else{
-        // Login invalido
-        echo "<script>alert('E-mail ou Senha incorretos!');window.location.href='login.php';</script>";
+        // Index invalido
+        echo "<script>alert('E-mail ou Senha incorretos!');window.location.href='Index.php';</script>";
     }
 }
 ?>
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
 </head>
 <body>
     <h2>Login:</h2>
-    <form action="login.php" method="POST">
+    <form action="Index.php" method="POST">
         <label for="email">E-mail:</label>
         <input type="email" id="email" name="email" required>
 
