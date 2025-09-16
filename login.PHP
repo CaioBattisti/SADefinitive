@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
         }
     }else{
         // Login invalido
-        echo "<script>alert('E-mail ou Senha incorretos!');window.location.href='index.php';</script>";
+        echo "<script>alert('E-mail ou Senha incorretos!');window.location.href='login.php';</script>";
     }
 }
 ?>
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
 </head>
 <body>
     <h2>Login:</h2>
-    <form action="index.php" method="POST">
+    <form action="login.php" method="POST">
         <label for="email">E-mail:</label>
         <input type="email" id="email" name="email" required>
 
