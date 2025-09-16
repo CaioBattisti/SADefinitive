@@ -110,6 +110,7 @@ $opcoes_menu = $permissoes[$id_perfil];
             </ul>
         </nav>
     </div>
+
     <!-- Carousel -->
     <div class="carousel-container" style="width: 100%; max-width: 1200px; overflow: hidden; margin: 20px auto; position: relative; border: 2px solid #ccc; border-radius: 10px;">
         <div class="carousel" style="display: flex; transition: transform 0.5s ease-in-out;">
