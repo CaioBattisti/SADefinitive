@@ -79,7 +79,7 @@ $funcionarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf8mb4">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Funcionários</title>
     <link rel="stylesheet" href="Estilo/style.css">

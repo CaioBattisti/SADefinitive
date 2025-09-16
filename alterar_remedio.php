@@ -75,7 +75,7 @@ $fornecedores = $stmtFornecedores->fetchAll(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf8mb4">
     <title>Alterar Remédio</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">

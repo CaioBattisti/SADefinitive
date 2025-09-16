@@ -73,7 +73,7 @@ if (isset($_GET['id']) || isset($_POST['id_busca'])) {
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf8mb4">
     <title>Alterar Fornecedor</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">

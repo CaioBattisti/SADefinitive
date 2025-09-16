@@ -67,7 +67,7 @@ if (isset($_GET['id']) || isset($_POST['busca_usuario'])) {
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf8mb4">
     <title>Alterar usuario</title>
     <link rel="stylesheet" href="Estilo/style.css">
     <link rel="stylesheet" href="Estilo/styles.css">
